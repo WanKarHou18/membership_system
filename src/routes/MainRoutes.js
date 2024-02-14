@@ -10,12 +10,25 @@ const UtilsTypography = Loadable(lazy(() => import('../views/Utils/Typography'))
 
 const SamplePage = Loadable(lazy(() => import('../views/SamplePage')));
 
+const MembershipForm = Loadable(lazy(()=>import('../views/EditMembershipForm')));
+
+const NewMembershipForm = Loadable(lazy(()=>import('../views/NewMembershipForm')));
+
+const LandingPage = Loadable(lazy(()=>import('../views/LandingPage')));
+
+const NotFoundPage = Loadable(lazy(()=>import('../views/NotFound')));
+
+const SettingPage = Loadable(lazy(()=>import('../views/Setting')));
 // ==============================|| MAIN ROUTES ||============================== //
 
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
   children: [
+    {
+      path: '/landing-page',
+      element: <LandingPage />
+    },
     {
       path: '/',
       element: <DashboardDefault />
@@ -24,8 +37,12 @@ const MainRoutes = {
       path: '/dashboard/default',
       element: <DashboardDefault />
     },
-    { path: '/utils/util-typography', element: <UtilsTypography /> },
-    { path: '/sample-page', element: <SamplePage /> }
+    // { path: '/utils/util-typography', element: <UtilsTypography /> },
+    { path: '/customer', element: <SamplePage /> },
+    { path: '/edit-membership-form', element: <MembershipForm/> },
+    { path: '/new-membership-form', element: <NewMembershipForm/> },
+    { path: '/setting', element: <SettingPage/> },
+    { path: '*', element: <NotFoundPage/> },
   ]
 };
 

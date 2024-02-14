@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React,{useState}from 'react';
+import { Link,useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -29,12 +29,19 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Google from 'assets/images/social-google.svg';
 
+//this project
+import { useUserAuth } from "../../context/UserAuthContext";
+import { isNull } from 'util';
+
 // ==============================|| FIREBASE REGISTER ||============================== //
 
 const FirebaseRegister = ({ ...rest }) => {
   const theme = useTheme();
   const [showPassword, setShowPassword] = React.useState(false);
   const [checked, setChecked] = React.useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { signUp,updateUserProfile } = useUserAuth();
+  let navigate = useNavigate();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -44,6 +51,21 @@ const FirebaseRegister = ({ ...rest }) => {
     event.preventDefault();
   };
 
+  const registerAccount = async (values) => {
+    setErrorMessage("");
+    console.log('UserName',values.username)
+    try {
+      const userCredential = await signUp(values.email, values.password);
+      const user = userCredential.user;
+      await user.updateProfile({
+        displayName: values.username,
+      });
+      navigate("/");
+    } catch (err) {
+      console.log('user_register_failure',err)
+      setErrorMessage("Register Unsuccessfully");
+    }
+  };
   return (
     <>
       <Grid container justifyContent="center">
@@ -89,17 +111,31 @@ const FirebaseRegister = ({ ...rest }) => {
 
       <Formik
         initialValues={{
+          username:'',
           email: 'admin@phoenixcoded.net',
           password: 'aA123456',
-          submit: null
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={registerAccount}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...rest}>
+            <TextField
+              error={Boolean(touched.username && errors.username)}
+              fullWidth
+              helperText={touched.username && errors.username}
+              label="Username"
+              margin="normal"
+              name="username"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              type="username"
+              value={values.username}
+              variant="outlined"
+            />
             <TextField
               error={Boolean(touched.email && errors.email)}
               fullWidth
@@ -168,11 +204,17 @@ const FirebaseRegister = ({ ...rest }) => {
                   </>
                 }
               />
+
             </Box>
             <Box mt={2}>
               <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                 Register
               </Button>
+            </Box>
+            <Box>
+              <Typography variant="subtitle2" color={theme.palette.error.main}sx={{ textDecoration: 'none' }}>
+                  {errorMessage}
+                </Typography>
             </Box>
           </form>
         )}

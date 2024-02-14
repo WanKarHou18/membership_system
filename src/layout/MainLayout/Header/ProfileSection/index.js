@@ -12,6 +12,14 @@ import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import MeetingRoomTwoToneIcon from '@mui/icons-material/MeetingRoomTwoTone';
 
+//redux
+import { useDispatch,useSelector } from 'react-redux';
+import * as actionTypes from 'store/actions';
+
+//this project import
+import { useUserAuth } from "../../../../context/UserAuthContext";
+import { useNavigate } from 'react-router';
+
 // ==============================|| PROFILE SECTION ||============================== //
 
 const ProfileSection = () => {
@@ -20,8 +28,11 @@ const ProfileSection = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const { logOut } = useUserAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleListItemClick = (event, index) => {
+  const handleListItemClick = (event, index,route) => {
     setSelectedIndex(index);
   };
 
@@ -46,6 +57,10 @@ const ProfileSection = () => {
     prevOpen.current = open;
   }, [open]);
 
+  const handleLogout =()=>{
+    dispatch({ type: actionTypes.LOGOUT, logout: true})
+    logOut()
+  }
   return (
     <>
       <Button
@@ -95,35 +110,35 @@ const ProfileSection = () => {
                     borderRadius: '10px'
                   }}
                 >
-                  <ListItemButton selected={selectedIndex === 0} onClick={(event) => handleListItemClick(event, 0)}>
+                  <ListItemButton onClick={()=>navigate('/setting')}>
                     <ListItemIcon>
                       <SettingsTwoToneIcon />
                     </ListItemIcon>
                     <ListItemText primary="Settings" />
                   </ListItemButton>
-                  <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
+                  {/* <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
                     <ListItemIcon>
                       <PersonTwoToneIcon />
                     </ListItemIcon>
                     <ListItemText primary="Profile" />
-                  </ListItemButton>
-                  <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
+                  </ListItemButton> */}
+                  {/* <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
                     <ListItemIcon>
                       <DraftsTwoToneIcon />
                     </ListItemIcon>
                     <ListItemText primary="My Messages" />
-                  </ListItemButton>
-                  <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
+                  </ListItemButton> */}
+                  {/* <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
                     <ListItemIcon>
                       <LockOpenTwoTone />
                     </ListItemIcon>
                     <ListItemText primary="Lock Screen" />
-                  </ListItemButton>
-                  <ListItemButton selected={selectedIndex === 4}>
+                  </ListItemButton> */}
+                  <ListItemButton onClick={()=>handleLogout()} >
                     <ListItemIcon>
                       <MeetingRoomTwoToneIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Logout" />
+                    <ListItemText primary="Logout"/>
                   </ListItemButton>
                 </List>
               </ClickAwayListener>

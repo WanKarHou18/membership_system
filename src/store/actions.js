@@ -5,7 +5,7 @@ export const MENU_OPEN = '@customization/MENU_OPEN';
 export const MENU_TYPE = '@customization/MENU_TYPE';
 
 // Action Creators
-export const updateData = (data) => ({
-    type: LOGOUT,
-    payload: data,
-  });
+// export const updateData = (data) => ({
+//     type: LOGOUT,
+//     payload: data,
+//   });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -15,6 +15,7 @@ import Logo from 'assets/images/logo-dark.svg';
 
 const Login = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Grid
@@ -62,9 +63,11 @@ const Login = () => {
               </Grid>
               <Grid container justifyContent="flex-start" sx={{ mt: theme.spacing(2), mb: theme.spacing(1) }}>
                 <Grid item>
-                  <Typography variant="subtitle2" color="secondary" sx={{ textDecoration: 'none', pl: 2 }}>
-                    Create new account
-                  </Typography>
+                <RouterLink to="/register">
+                    <Typography variant="subtitle2" color="secondary" sx={{ textDecoration: 'none', pl: 2 }} >
+                      Create new account
+                    </Typography>
+                  </RouterLink>
                 </Grid>
               </Grid>
             </Grid>

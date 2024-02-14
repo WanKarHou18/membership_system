@@ -8,12 +8,12 @@ import { Box, Grid, IconButton } from '@mui/material';
 // project import
 import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
-import NotificationSection from './NotificationSection';
+// import NotificationSection from './NotificationSection';
 import { drawerWidth } from 'config.js';
 
 // assets
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
-import logo from 'assets/images/logo.svg';
+// import logo from 'assets/images/logo.svg';
 
 // ==============================|| HEADER ||============================== //
 
@@ -24,13 +24,13 @@ const Header = ({ drawerToggle }) => {
     <>
       <Box width={drawerWidth}>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          {/* <Box sx={{ display: { xs: 'none', md: 'block' } }}>
             <Grid item>
               <Box mt={0.5}>
                 <img src={logo} alt="Logo" />
               </Box>
             </Grid>
-          </Box>
+          </Box> */}
           <Grid item>
             <IconButton
               edge="start"
@@ -47,7 +47,7 @@ const Header = ({ drawerToggle }) => {
       </Box>
       <Box sx={{ flexGrow: 1 }} />
       <SearchSection theme="light" />
-      <NotificationSection />
+      {/* <NotificationSection /> */}
       <ProfileSection />
     </>
   );

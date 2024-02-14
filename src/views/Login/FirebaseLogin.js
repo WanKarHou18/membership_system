@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, {useState}from 'react';
+import { useNavigate } from 'react-router';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -21,6 +21,10 @@ import {
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 
+
+//this project
+import { useUserAuth } from "../../context/UserAuthContext";
+
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -30,7 +34,10 @@ import Google from 'assets/images/social-google.svg';
 
 const FirebaseLogin = ({ ...rest }) => {
   const theme = useTheme();
+  const { logIn, googleSignIn } = useUserAuth();
+  let navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [errorMessage,setErrorMessage] = useState('');
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -39,6 +46,22 @@ const FirebaseLogin = ({ ...rest }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const loginAccount =async (values)=>{
+
+      // e.preventDefault();
+      // setError("");
+      try {
+        //Testing: "elonwan@gmail.com","Hello@2024"
+        const userCredential=await logIn(values.email,values.password);
+        console.log("Login User",userCredential)
+        navigate("/");
+      } catch (err) {
+        console.log('Err',err)
+        // setError(err.message);
+        setErrorMessage("Login unsuccessfully")
+      }
+  }
 
   return (
     <>
@@ -85,6 +108,7 @@ const FirebaseLogin = ({ ...rest }) => {
 
       <Formik
         initialValues={{
+          username:'',
           email: '',
           password: '',
           submit: null
@@ -93,6 +117,7 @@ const FirebaseLogin = ({ ...rest }) => {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={loginAccount}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...rest}>
@@ -100,7 +125,7 @@ const FirebaseLogin = ({ ...rest }) => {
               error={Boolean(touched.email && errors.email)}
               fullWidth
               helperText={touched.email && errors.email}
-              label="Email Address / Username"
+              label="Email Address"
               margin="normal"
               name="email"
               onBlur={handleBlur}
@@ -141,7 +166,12 @@ const FirebaseLogin = ({ ...rest }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="space-between">
+              <Grid item>
+                <Typography variant="subtitle2" color={theme.palette.error.main}sx={{ textDecoration: 'none' }}>
+                  {errorMessage}
+                </Typography>
+              </Grid>
               <Grid item>
                 <Typography variant="subtitle2" color="primary" sx={{ textDecoration: 'none' }}>
                   Forgot Password?
