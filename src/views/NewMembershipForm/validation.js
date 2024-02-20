@@ -7,10 +7,18 @@ export const isEmailValid = (value) => {
 
 
 export const validationSchema={
-email: Yup.string()
-    .required('Email is required')
-    .test('email', 'Invalid email address', isEmailValid)
-    ,
-password: Yup.string().max(255).required('Password is required'),
-customerName: Yup.string().max(255),
+
+customerName: Yup.string()
+  .max(255)
+  .required('Customer Name is required'),
+
+currentPoint: Yup.number()
+  .integer('Please enter a valid integer')
+  .typeError('Please enter a valid integer')
+  .required('This field is required'),
+
+pointsToReach: Yup.number()
+  .integer('Please enter a valid integer')
+  .typeError('Please enter a valid integer')
+  .required('This field is required'),
 }

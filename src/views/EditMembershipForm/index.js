@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useLocation,useNavigate} from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -37,13 +37,23 @@ import Google from 'assets/images/social-google.svg';
 import Breadcrumb from 'component/Breadcrumb';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { validationSchema } from './validation';
+import { CustomerMembership,updateCustomerMembership } from 'api/customerMembership';
 
 // ==============================|| FIREBASE LOGIN ||============================== //
 
 const MembershipForm = ({ isEdit,...rest }) => {
   const theme = useTheme();
+  const { user } = useUserAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const today = new Date();
+  const customerMembership = new CustomerMembership();
   const statuses = ['Active','Close']
-  // const { setFieldValue } = useFormikContext();
+  //ToDo:: handle if access the membership form. 
+  const membershipData = location.state.data;
+  const [startDate,setStartDate]=useState(membershipData?dayjs(membershipData.startDate):dayjs(today));
+  const [endDate,setEndDate]=useState(membershipData?dayjs(membershipData.expiryDate):dayjs(today));
 
   const generateAndSetupMembershipCode=()=>{
     return 'Hello'
@@ -51,17 +61,35 @@ const MembershipForm = ({ isEdit,...rest }) => {
   const code = generateAndSetupMembershipCode();
 
   const handleSubmitMemberShipForm= async(values)=>{
+    customerMembership.uuid=user.email;
+    customerMembership.customerName=values.editCustomerName;
+    customerMembership.membershipId=membershipData.membershipId;
+    customerMembership.pointToReach=values.editPointsToReach;
+    customerMembership.currentPoint=values.editCurrentPoint;
+    customerMembership.expiryDate=new Date(endDate);
+    customerMembership.startDate=new Date(startDate);
+    customerMembership.duration='';
+    customerMembership.membershipCode='12345';
+    customerMembership.status=values.editMemberStatus;
+    updateCustomerMembership(membershipData.membershipId,customerMembership);
+    navigate('/customer')
   }
 
-  /*Refer:https://formik.org/docs/api/useFormikContext */
-  const AutoSetField = () => {
-    const { user } = useUserAuth();
-    const { setFieldValue } = useFormikContext();
-    useEffect(() => {
-    setFieldValue('editMemberStatus',statuses[0])
-    }, [user]);
-    return null;
-  };
+  const initialValues = membershipData?{
+    editCustomerName:membershipData.customerName,
+    editMembershipCode:membershipData.membershipCode,
+    editPointsToReach:membershipData.pointToReach,
+    editCurrentPoint:membershipData.currentPoint,
+    submit: null,
+    editMemberStatus:membershipData.status
+  }:{
+    editCustomerName:'',
+    editMembershipCode:'',
+    editPointsToReach:'',
+    editCurrentPoint:'',
+    submit: null,
+    editMemberStatus:''
+  }
 
   const BreadcrumbSection =()=>{
     return(
@@ -83,39 +111,29 @@ const MembershipForm = ({ isEdit,...rest }) => {
     <>
       <BreadcrumbSection/>
       <Formik
-        initialValues={{
-          customerName:'',
-          membershipCode:'',
-          startDate:'',
-          endDate:'',
-          pointsToReach:'',
-          currentPoint:'',
-          submit: null,
-          editMemberStatus:''
-        }}
+        initialValues={initialValues}
         onSubmit={handleSubmitMemberShipForm}
-        // validationSchema={Yup.object().shape(validationSchema)}
+        validationSchema={Yup.object().shape(validationSchema)}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...rest}>
-            <AutoSetField/>
             <TextField
-              error={Boolean(touched.customerName && errors.customerName)}
+              error={Boolean(touched.editCustomerName && errors.editCustomerName)}
               fullWidth
-              helperText={touched.customerName && errors.customerName}
+              helperText={touched.editCustomerName && errors.editCustomerName}
               label="Customer Name"
               margin="normal"
-              name="customerName"
+              name="editCustomerName"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="customerName"
-              value={values.customerName}
+              type="editCustomerName"
+              value={values.editCustomerName}
               variant="outlined"
             />
             <DatePicker
               label="Loyalty Card Start Date"
-              name="startDate"
-              defaultValue={dayjs(new Date())}
+              name="editStartDate"
+              defaultValue={membershipData?dayjs(membershipData.startDate):dayjs(today)}
               views={['year', 'month', 'day']}
               slotProps={{
                 openPickerIcon: { fontSize: 'large' },
@@ -137,16 +155,16 @@ const MembershipForm = ({ isEdit,...rest }) => {
                 disabled={true}
                 label="Membership Code (auto generated)"
                 margin="normal"
-                name="membershipCode"
+                name="editMembershipCode"
                 type="membershipCode"
                 value={code}
                 variant="outlined"
                 />
             </FormControl>
             <DatePicker
-              name='endDate'
+              name='editEndDate'
+              defaultValue={membershipData?dayjs(membershipData.expiryDate):dayjs(today)}
               label="Loyalty Card End Date"
-              defaultValue={dayjs(new Date())}
               views={['year', 'month', 'day']}
               // onChange={(val) => setFieldValue('endDate', val)}
               slotProps={{
@@ -159,33 +177,35 @@ const MembershipForm = ({ isEdit,...rest }) => {
                   color: 'secondary',
                 },
               }}
-              onChange={handleChange}
+              onChange={(value) => {
+                setEndDate(value)
+              }}
             />
             <TextField
-              error={Boolean(touched.pointsToReach && errors.pointsToReach)}
+              error={Boolean(touched.editPointsToReach && errors.editPointsToReach)}
               fullWidth
-              helperText={touched.pointsToReach && errors.pointsToReach}
+              helperText={touched.editPointsToReach && errors.editPointsToReach}
               label="Points To Reach"
               margin="normal"
-              name="pointsToReach"
+              name="editPointsToReach"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="pointsToReach"
-              value={values.pointsToReach}
+              type="editPointsToReach"
+              value={values.editPointsToReach}
               variant="outlined"
               placeholder="example: 30"
             />
             <TextField
-              error={Boolean(touched.currentPoint && errors.currentPoint)}
+              error={Boolean(touched.editCurrentPoint && errors.editCurrentPoint)}
               fullWidth
-              helperText={touched.currentPoint && errors.currentPoint}
+              helperText={touched.editCurrentPoint && errors.editCurrentPoint}
               label="Current Point"
               margin="normal"
-              name="currentPoint"
+              name="editCurrentPoint"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="currentPoint"
-              value={values.pointsToReach}
+              type="editCurrentPoint"
+              value={values.editCurrentPoint}
               variant="outlined"
               placeholder="example: 10"
             />

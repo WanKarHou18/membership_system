@@ -7,6 +7,23 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Download } from '@mui/icons-material';
 import {Typography,IconButton,Grid} from '@mui/material';
+import html2canvas from 'html2canvas';
+
+const downloadCardAsImage = () => {
+  const cardElement = document.getElementById('myCard'); // Replace 'myCard' with the actual ID or class of your card component
+
+  if (cardElement) {
+    html2canvas(cardElement).then(canvas => {
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = 'my_card.png'; // Set the desired filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+};
 
 //Todo : Customize this part.
 /**
@@ -17,12 +34,12 @@ import {Typography,IconButton,Grid} from '@mui/material';
  * @param {*} content
  * @returns 
  */
-const CustomDialog = ({showDialog,isShowDialog,content}) => {
+const CustomDialog = ({showDialog,isShowDialog,content,dialogTitle}) => {
 
   const dialogStyle = {
     // Add your custom styles here
-    minWidth: '30rem',
-    minHeight: '30rem',
+    // width: '30rem',
+    // minHeight: '30rem',
 
   };
 
@@ -41,10 +58,10 @@ const CustomDialog = ({showDialog,isShowDialog,content}) => {
         <DialogTitle style={{ backgroundColor: '#2196F3', color: '#ffffff'}}>
           <Grid container spacing={1} justifyContent="space-between">
             <Typography style={{display:'flex',justifyContent:'center'}}>
-              Dialog Title
+              {dialogTitle}
             </Typography>
             <IconButton >
-              <Download/>
+              <Download  onClick={downloadCardAsImage}/>
             </IconButton>
           </Grid>
         </DialogTitle>

@@ -42,12 +42,13 @@ import Breadcrumb from 'component/Breadcrumb';
 import { validationSchema } from './validation';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { CustomerMembership,addCustomerMembership } from 'api/customerMembership';
-
+import { useNavigate } from 'react-router-dom';
 // ==============================|| FIREBASE LOGIN ||============================== //
 
 const NewMembershipForm = ({ isEdit,...rest }) => {
   const theme = useTheme();
   const { user } = useUserAuth();
+  const navigate = useNavigate();
   const statuses = ['Active','Close']
   const [startDate,setStartDate]=useState(new Date());
   const [endDate,setEndDate]=useState(new Date());
@@ -69,9 +70,9 @@ const NewMembershipForm = ({ isEdit,...rest }) => {
     customerMembership.duration='';
     customerMembership.membershipCode='12345';
     customerMembership.status=values.newMemberStatus;
-
-    console.log('customerMembership',customerMembership)
+    console.log('HAHA',customerMembership)
     addCustomerMembership(customerMembership);
+    navigate('/customer')
   }
 /*Refer:https://formik.org/docs/api/useFormikContext */
 const AutoSetField = () => {
@@ -114,7 +115,7 @@ const AutoSetField = () => {
           submit: null
         }}
         onSubmit={handleSubmitMemberShipForm}
-        // validationSchema={Yup.object().shape(validationSchema)}
+        validationSchema={Yup.object().shape(validationSchema)}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...rest}>

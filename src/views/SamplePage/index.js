@@ -2,7 +2,7 @@ import React,{ useState,useEffect }from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 
 // material-ui
-import { Card, CardHeader, CardContent, Divider, Paper, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import CustomDialog from './Dialog/dialog';
 import { AddCard} from '@mui/icons-material';
 
@@ -13,10 +13,12 @@ import { gridSpacing } from 'config.js';
 import CustomerCard from './CustomerCard/customerCard';
 import MembershipCard from './MembershipCard/membershipCard';
 
-import { getCustomerMemberships } from 'api/customerMembership';
+import { getCustomerMemberships,deleteCustomerMembership  } from 'api/customerMembership';
 
 import SearchSection from './SearchSection';
-import { resolveConfig } from 'prettier';
+
+import { useUserAuth } from "../../context/UserAuthContext";
+
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const items = [
@@ -26,14 +28,13 @@ const items = [
   // ... more items
 ];
 
-
 const membershipCardData =
   {
     avatar: "/avatar.png",
     qr: "/qr.png",
-    displayName: "Elon Musk",
+    displayName: "XYZ Membership",
     tagline: "Entrepreneur",
-    title: "CEO Boring Company",
+    title: "XYZ123",
     phone: "+123-456-789",
     mail: "m@spacex.com",
     location: "United State , Califonia",
@@ -42,8 +43,34 @@ const membershipCardData =
 
 const SamplePage = () => {
   const [isOpenCardDialog, setOpenCardDialog] = useState(false);
+  const [memberships,setMemberships]=useState(null);
 
-  console.log('getCustomerMemberships',getCustomerMemberships())
+  const {user} = useUserAuth();
+
+  const getMemberships = async () => {
+    try {
+        await getCustomerMemberships(user.email).then((result)=>{
+          setMemberships(result)
+        });
+    } catch (error) {
+        setMemberships(null);
+    }
+  };
+
+  useEffect(()=>{
+    if(user){
+      getMemberships()
+    }
+  },[])
+
+  const handleDeleteMembership = async (membershipId) => {
+    try {
+        await deleteCustomerMembership(membershipId);
+        getMemberships();
+    } catch (error) {
+        console.error('Error deleting membership:', error);
+    }
+  };
 
   const BreadcrumbSection =()=>{
     return(
@@ -57,11 +84,6 @@ const SamplePage = () => {
       </Breadcrumb>
     )
   }
-
-  //Initial Fetch Data
-  useEffect(() => {
-    getCustomerMemberships()
-  },[]);
   
   return (
     <>
@@ -70,13 +92,18 @@ const SamplePage = () => {
         <SearchSection/>
       </Grid>
       <Grid container spacing={gridSpacing} key={"loyaltycards"} >
-        {items.map((item,index) => (
+        {memberships&&memberships.map((item,index) => (
           <Grid item xs={12} sm={6} md={4} key={"grid"+index}>
-            <CustomerCard key={"loyaltyCard"+index} showDialog={setOpenCardDialog}/>
+            <CustomerCard key={"loyaltyCard"+index} showDialog={setOpenCardDialog} data={item} deleteMembership={handleDeleteMembership}/>
           </Grid>
         ))}
       </Grid>
-      <CustomDialog showDialog={setOpenCardDialog} isShowDialog={isOpenCardDialog} content={<MembershipCard people={membershipCardData} />}/>
+      <CustomDialog 
+        showDialog={setOpenCardDialog} 
+        isShowDialog={isOpenCardDialog} 
+        dialogTitle={"Customer Membership Card"} 
+        content={<MembershipCard people={membershipCardData} />}
+      />
     </>
   );
 };

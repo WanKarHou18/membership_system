@@ -46,42 +46,40 @@ export const addCustomerMembership = async (CustomerMembership) => {
  * 
  * @returns CustomerMembership/null
  */
-export const getCustomerMembershipsPromise= async () => {
+export const getCustomerMemberships= async (uuid) => {
     try {
-      const querySnapshot =  await getDocs(collection(db, CUSTOMER_MEMBERSHIP));
+      const memberships = [];
 
-      const querySnapshotDocs =querySnapshot.docs;
-      const memberships = querySnapshotDocs.map((doc) => {
-        const membershipData = doc.data();
-        console.log("membershipData",membershipData)
-        return new CustomerMembership( 
-          membershipData.uuid,
-          membershipData.customerName,
-          membershipData.membershipId,
-          membershipData.pointToReach,
-          membershipData.currentPoint,
-          membershipData.expiryDate,
-          membershipData.startDate,
-          membershipData.duration,
-          membershipData.membershipCode,
-          membershipData.status
-        );
-      });
+      const collectionRef = db.collection(CUSTOMER_MEMBERSHIP);
+      const query = collectionRef.where('uuid', '==', uuid);
+      
+      await query.get().then(
+        (querySnapshot)=>{
+          querySnapshot.docs.map((doc) => {
+            const membershipData = doc.data();
+            console.log("membershipData",membershipData)
+            const customerMembership =new CustomerMembership( 
+              membershipData.uuid,
+              membershipData.customerName,
+              membershipData.membershipId,
+              membershipData.pointToReach,
+              membershipData.currentPoint,
+              membershipData.expiryDate,
+              membershipData.startDate,
+              membershipData.duration,
+              membershipData.membershipCode,
+              membershipData.status
+            );
+            memberships.push(customerMembership)
+          });
+        }
+      );
       return memberships;
     } catch (error) {
+      console.log('HIHI',error)
       return null;
     }
   };
-
-export const getCustomerMemberships=async ()=>{
-  let memberships=[]
-  const promise =   await getCustomerMembershipsPromise();
-  promise
-  .then((data) =>{
-    memberships=data;
-  });
-  return memberships;
-}
 
 /**
  * 
@@ -118,9 +116,10 @@ export const getCustomerMembershipByUUID = async (uuid) => {
 export const updateCustomerMembership = async (docId, updatedData) => {
   try {
     const resultRef = doc(db, CUSTOMER_MEMBERSHIP, docId);
-    await updateDoc(resultRef, updatedData);
+    await updateDoc(resultRef, JSON.parse(JSON.stringify(updatedData)));
     return true;
   } catch (error) {
+    console.log('updateCustomerMembershipFail',error)
     return false;
   }
 };
