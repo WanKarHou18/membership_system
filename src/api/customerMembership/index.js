@@ -46,34 +46,27 @@ export const addCustomerMembership = async (CustomerMembership) => {
  * 
  * @returns CustomerMembership/null
  */
-export const getCustomerMemberships= async (uuid) => {
+export const getCustomerMemberships= async () => {
     try {
       const memberships = [];
 
-      const collectionRef = db.collection(CUSTOMER_MEMBERSHIP);
-      const query = collectionRef.where('uuid', '==', uuid);
-      
-      await query.get().then(
-        (querySnapshot)=>{
-          querySnapshot.docs.map((doc) => {
-            const membershipData = doc.data();
-            console.log("membershipData",membershipData)
-            const customerMembership =new CustomerMembership( 
-              membershipData.uuid,
-              membershipData.customerName,
-              membershipData.membershipId,
-              membershipData.pointToReach,
-              membershipData.currentPoint,
-              membershipData.expiryDate,
-              membershipData.startDate,
-              membershipData.duration,
-              membershipData.membershipCode,
-              membershipData.status
-            );
-            memberships.push(customerMembership)
-          });
-        }
-      );
+      const querySnapshot = await getDocs(collection(db, CUSTOMER_MEMBERSHIP));
+      querySnapshot.docs.map((doc) => {
+        const membershipData = doc.data();
+        const customerMembership =new CustomerMembership( 
+          membershipData.uuid,
+          membershipData.customerName,
+          membershipData.membershipId,
+          membershipData.pointToReach,
+          membershipData.currentPoint,
+          membershipData.expiryDate,
+          membershipData.startDate,
+          membershipData.duration,
+          membershipData.membershipCode,
+          membershipData.status
+        );
+        memberships.push(customerMembership)
+      });
       return memberships;
     } catch (error) {
       console.log('HIHI',error)
@@ -87,24 +80,35 @@ export const getCustomerMemberships= async (uuid) => {
  * @returns CustomerMembership/null
  */
 export const getCustomerMembershipByUUID = async (uuid) => {
-  const querySnapshot = await getDocs(query(collection(db, CUSTOMER_MEMBERSHIP, where('uuid', '==', uuid))));
-  const membershipDoc = querySnapshot.docs[0];
-
-  if (membershipDoc) {
-    const membershipData = membershipDoc.data();
-    return new CustomerMembership( 
-      membershipData.uuid,
-      membershipData.customerName,
-      membershipData.membershipId,
-      membershipData.pointToReach,
-      membershipData.currentPoint,
-      membershipData.expiryDate,
-      membershipData.startDate,
-      membershipData.duration,
-      membershipData.membershipCode,
-      membershipData.status
-    );}
-  return null; // User with the specified UUID not found
+  try {
+    console.log('uuid',uuid)
+    const memberships = [];
+    //::Todo: Change it to use query methods.
+    // const query = doc(collection(db,CUSTOMER_MEMBERSHIP), where("uuid", "!=", uuid))
+    const querySnapshot = await getDocs(collection(db, CUSTOMER_MEMBERSHIP),where('uuid', '==', uuid));
+    querySnapshot.docs.map((doc) => {
+      const membershipData = doc.data();
+      const customerMembership =new CustomerMembership( 
+        membershipData.uuid,
+        membershipData.customerName,
+        membershipData.membershipId,
+        membershipData.pointToReach,
+        membershipData.currentPoint,
+        membershipData.expiryDate,
+        membershipData.startDate,
+        membershipData.duration,
+        membershipData.membershipCode,
+        membershipData.status
+      );
+      if(customerMembership.uuid === uuid){
+        memberships.push(customerMembership)
+      }
+    });
+    return memberships;
+  } catch (error) {
+    console.log('HIHI',error)
+    return null;
+  }
 };
 
 /**

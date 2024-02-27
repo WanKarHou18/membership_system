@@ -64,7 +64,7 @@ export const Navigation = (props) => {
               </a>
             </li>
             <li>
-              <a href="/login" className="page-scroll" style={{fontWeight:'bold'}}>
+              <a href="/register" className="page-scroll" style={{fontWeight:'bold'}}>
                 Login / Register
               </a>
             </li>

@@ -6,7 +6,8 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { auth } from "../config";
 import { useNavigate } from "react-router";
@@ -32,6 +33,9 @@ export function UserAuthContextProvider({ children }) {
     return signInWithPopup(auth, googleAuthProvider);
   }
 
+  function resetPassword(email){
+    return sendPasswordResetEmail(auth,email);
+  }
   function updateUserProfile(data){
     updateProfile(auth,data).then(() => {
       // Profile updated!
@@ -57,7 +61,7 @@ export function UserAuthContextProvider({ children }) {
 
   return (
     <userAuthContext.Provider
-      value={{ user, logIn, signUp, logOut, googleSignIn,updateUserProfile }}
+      value={{ user, logIn, signUp, logOut, googleSignIn,updateUserProfile,resetPassword }}
     >
       {children}
     </userAuthContext.Provider>

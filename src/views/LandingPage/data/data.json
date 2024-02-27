@@ -1,10 +1,10 @@
 {
   "Header": {
     "title": "FRENZ",
-    "paragraph": "Online Loyalty Card Platform for Business "
+    "paragraph": "Online Loyalty Card Platform for Online Business "
   },
   "About": {
-    "paragraph": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "paragraph": "Welcome to our cutting-edge online loyalty card platform! Elevate your customer engagement with our user-friendly landing page that puts you in control. Our platform empowers you to seamlessly perform CRUD operations – Create, Read, Update, and Delete – on customer memberships and cards with utmost ease.",
     "Why": [
       "Lorem ipsum dolor",
       "Tempor incididunt",

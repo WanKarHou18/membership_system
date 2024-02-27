@@ -13,11 +13,11 @@ import { gridSpacing } from 'config.js';
 import CustomerCard from './CustomerCard/customerCard';
 import MembershipCard from './MembershipCard/membershipCard';
 
-import { getCustomerMemberships,deleteCustomerMembership  } from 'api/customerMembership';
+import { getCustomerMembershipByUUID,deleteCustomerMembership } from 'api/customerMembership';
 
 import SearchSection from './SearchSection';
 
-import { useUserAuth } from "../../context/UserAuthContext";
+import { useUserAuth } from '../../context/UserAuthContext';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -49,7 +49,7 @@ const SamplePage = () => {
 
   const getMemberships = async () => {
     try {
-        await getCustomerMemberships(user.email).then((result)=>{
+        await getCustomerMembershipByUUID(user.email).then((result)=>{
           setMemberships(result)
         });
     } catch (error) {
@@ -89,7 +89,10 @@ const SamplePage = () => {
     <>
       <BreadcrumbSection/>
       <Grid container style={{padding:'10px 10px 10px 0'}}>
-        <SearchSection/>
+        <SearchSection
+           data = {memberships}
+           setData = {setMemberships}
+        />
       </Grid>
       <Grid container spacing={gridSpacing} key={"loyaltycards"} >
         {memberships&&memberships.map((item,index) => (

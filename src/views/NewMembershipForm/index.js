@@ -65,8 +65,8 @@ const NewMembershipForm = ({ isEdit,...rest }) => {
     customerMembership.membershipId="123";
     customerMembership.pointToReach=values.pointsToReach;
     customerMembership.currentPoint=values.currentPoint;
-    customerMembership.expiryDate=new Date(endDate);
-    customerMembership.startDate=new Date(startDate);
+    customerMembership.expiryDate=endDate;
+    customerMembership.startDate=startDate;
     customerMembership.duration='';
     customerMembership.membershipCode='12345';
     customerMembership.status=values.newMemberStatus;
@@ -147,7 +147,7 @@ const AutoSetField = () => {
                   color: 'secondary',
                 },
               }}
-              onChange={(values)=>setStartDate(values)}
+              onChange={(value)=>setStartDate(dayjs(value, 'DD/MM/YYYY'))}
             />
             <FormControl fullWidth sx={{ mt: theme.spacing(3), mb: theme.spacing(1) }}>
                 <TextField
@@ -177,7 +177,7 @@ const AutoSetField = () => {
                   color: 'secondary',
                 },
               }}
-              onChange={(values)=>setEndDate(values)}
+              onChange={(value)=>setEndDate(dayjs(value, 'DD/MM/YYYY'))}
             />
             <TextField
               error={Boolean(touched.pointsToReach && errors.pointsToReach)}

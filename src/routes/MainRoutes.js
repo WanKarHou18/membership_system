@@ -26,11 +26,11 @@ const MainRoutes = {
   element: <MainLayout />,
   children: [
     {
-      path: '/landing-page',
+      path: '/services',
       element: <LandingPage />
     },
     {
-      path: '/',
+      path: '/dashboard',
       element: <DashboardDefault />
     },
     {

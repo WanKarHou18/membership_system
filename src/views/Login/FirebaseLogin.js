@@ -1,5 +1,6 @@
 import React, {useState}from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate} from 'react-router';
+
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -172,8 +173,8 @@ const FirebaseLogin = ({ ...rest }) => {
                   {errorMessage}
                 </Typography>
               </Grid>
-              <Grid item>
-                <Typography variant="subtitle2" color="primary" sx={{ textDecoration: 'none' }}>
+              <Grid item >
+                <Typography variant="subtitle2" color="primary" sx={{ textDecoration: 'none' }} onClick={()=>navigate('/forget-password')}>
                   Forgot Password?
                 </Typography>
               </Grid>
