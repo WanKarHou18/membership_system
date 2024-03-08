@@ -6,11 +6,11 @@ import * as actionTypes from './actions';
 export const initialState = {
   isOpen: 'dashboard', //for active default menu
   navType: '',
-  
   /**
    * Login, Logout, Sign Up
    */
   logout:false,
+  email: ''
 };
 
 const customizationReducer = (state = initialState, action) => {
@@ -29,6 +29,11 @@ const customizationReducer = (state = initialState, action) => {
       return{
         ...state,
         logout: action.payload
+      }
+    case actionTypes.SET_USER_EMAIL:
+      return{
+        ...state,
+        email: action.payload,
       }
     default:
       return state;

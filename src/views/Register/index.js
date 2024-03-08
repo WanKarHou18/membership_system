@@ -10,7 +10,8 @@ import FirebaseRegister from './FirebaseRegister';
 import { Link } from 'react-router-dom';
 
 // assets
-import Logo from 'assets/images/logo-dark.svg';
+// import Logo from 'assets/images/logo-dark.svg';
+import Logo from 'assets/images/logo.png'
 
 // ==============================|| REGISTER ||============================== //
 
@@ -54,7 +55,7 @@ const Register = () => {
                   </Grid>
                   <Grid item>
                     <RouterLink to="/">
-                      <img alt="Auth method" src={Logo} />
+                      <img alt="Auth method" src={Logo} width={80}/>
                     </RouterLink>
                   </Grid>
                 </Grid>

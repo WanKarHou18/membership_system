@@ -1,0 +1,49 @@
+/* MyDatePickerStyles.css */
+
+/* Customize the date picker container */
+.date-picker-container {
+    display: inline-block;
+    position: relative;
+  }
+  
+  /* Style the calendar wrapper */
+  .react-datepicker-wrapper {
+    display: inline-block;
+  }
+  
+  /* Optional: Style the calendar dropdown */
+  .react-datepicker {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Optional: Style the calendar header */
+  .react-datepicker__header {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Optional: Style the calendar day names */
+  .react-datepicker__day-name {
+    color: #4caf50;
+  }
+  
+  /* Optional: Style the selected date */
+  .react-datepicker__day--selected {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Optional: Style the today's date */
+  .react-datepicker__day--today {
+    font-weight: bold;
+  }
+  
+  /* Optional: Style the calendar arrow icon */
+  .react-datepicker-popper {
+    margin-top: 0; /* Optional: Adjust the margin if needed */
+  }
+  
+  /* Optional: Style the calendar arrow icon */
+  .react-datepicker__triangle::before {
+    border-bottom-color: #4caf50;
+  }

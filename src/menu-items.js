@@ -8,6 +8,7 @@ import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import ChromeReaderModeOutlinedIcon from '@mui/icons-material/ChromeReaderModeOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import { Settings, Handyman } from '@mui/icons-material';
 
 const icons = {
   NavigationOutlinedIcon: NavigationOutlinedIcon,
@@ -18,7 +19,8 @@ const icons = {
   AccountTreeOutlinedIcon: AccountTreeOutlinedIcon,
   BlockOutlinedIcon: BlockOutlinedIcon,
   AppsOutlinedIcon: AppsOutlinedIcon,
-  ContactSupportOutlinedIcon: ContactSupportOutlinedIcon
+  ContactSupportOutlinedIcon: ContactSupportOutlinedIcon,
+  SettingIcon: Settings
 };
 
 // eslint-disable-next-line
@@ -26,8 +28,8 @@ export default {
   items: [
     {
       id: 'navigation',
-      title: 'Materially',
-      caption: 'Dashboard',
+      title: 'FRENZ',
+      // caption: 'Dashboard',
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],
       children: [
@@ -36,98 +38,147 @@ export default {
           title: 'Dashboard',
           type: 'item',
           icon: icons['HomeOutlinedIcon'],
-          url: '/dashboard/default'
+          url: '/dashboard'
         }
       ]
     },
     {
-      id: 'pages',
-      title: 'Pages',
-      caption: 'Prebuild Pages',
+      id: 'Membership',
+      title: 'Membership',
+      // caption: 'Prebuild Pages',
       type: 'group',
       icon: icons['NavigationOutlinedIcon'],
       children: [
         {
-          id: 'sample-page',
-          title: 'Sample Page',
+          id: 'customer-page',
+          title: 'Customer',
           type: 'item',
-          url: '/sample-page',
+          url: '/customer',
           icon: icons['ChromeReaderModeOutlinedIcon']
         },
-        {
-          id: 'auth',
-          title: 'Authentication',
-          type: 'collapse',
-          icon: icons['SecurityOutlinedIcon'],
-          children: [
-            {
-              id: 'login-1',
-              title: 'Login',
-              type: 'item',
-              url: '/application/login',
-              target: true
-            },
-            {
-              id: 'register',
-              title: 'Register',
-              type: 'item',
-              url: '/application/register',
-              target: true
-            }
-          ]
-        }
+        // {
+        //   id: 'auth',
+        //   title: 'Authentication',
+        //   type: 'collapse',
+        //   icon: icons['SecurityOutlinedIcon'],
+        //   children: [
+        //     {
+        //       id: 'login-1',
+        //       title: 'Login',
+        //       type: 'item',
+        //       url: '/application/login',
+        //       target: true
+        //     },
+        //     {
+        //       id: 'register',
+        //       title: 'Register',
+        //       type: 'item',
+        //       url: '/application/register',
+        //       target: true
+        //     }
+        //   ]
+        // }
       ]
     },
     {
-      id: 'utils',
-      title: 'Utils',
+      id: 'Setting',
+      title: 'Setting',
+      // caption: 'Prebuild Pages',
       type: 'group',
-      icon: icons['AccountTreeOutlinedIcon'],
+      icon: icons['NavigationOutlinedIcon'],
       children: [
         {
-          id: 'util-icons',
-          title: 'Icons',
+          id: 'setting',
+          title: 'Setting',
           type: 'item',
-          url: 'https://mui.com/material-ui/material-icons/',
-          icon: icons['AppsOutlinedIcon'],
-          external: true,
-          target: true
+          url: '/setting',
+          icon: icons['SettingIcon']
         },
-        {
-          id: 'util-typography',
-          title: 'Typography',
-          type: 'item',
-          url: '/utils/util-typography',
-          icon: icons['FormatColorTextOutlinedIcon']
-        }
+        // {
+        //   id: 'auth',
+        //   title: 'Authentication',
+        //   type: 'collapse',
+        //   icon: icons['SecurityOutlinedIcon'],
+        //   children: [
+        //     {
+        //       id: 'login-1',
+        //       title: 'Login',
+        //       type: 'item',
+        //       url: '/application/login',
+        //       target: true
+        //     },
+        //     {
+        //       id: 'register',
+        //       title: 'Register',
+        //       type: 'item',
+        //       url: '/application/register',
+        //       target: true
+        //     }
+        //   ]
+        // }
       ]
     },
+    // {
+    //   id: 'utils',
+    //   title: 'Utils',
+    //   type: 'group',
+    //   icon: icons['AccountTreeOutlinedIcon'],
+    //   children: [
+    //     {
+    //       id: 'util-icons',
+    //       title: 'Icons',
+    //       type: 'item',
+    //       url: 'https://mui.com/material-ui/material-icons/',
+    //       icon: icons['AppsOutlinedIcon'],
+    //       external: true,
+    //       target: true
+    //     },
+    //     {
+    //       id: 'util-typography',
+    //       title: 'Typography',
+    //       type: 'item',
+    //       url: '/utils/util-typography',
+    //       icon: icons['FormatColorTextOutlinedIcon']
+    //     }
+    //   ]
+    // },
     {
       id: 'support',
       title: 'Support',
       type: 'group',
       icon: icons['ContactSupportOutlinedIcon'],
       children: [
+        // {
+        //   id: 'disabled-menu',
+        //   title: 'Disabled Menu',
+        //   type: 'item',
+        //   url: '#',
+        //   icon: icons['BlockOutlinedIcon'],
+        //   disabled: true
+        // },
         {
-          id: 'disabled-menu',
-          title: 'Disabled Menu',
+          id: 'help',
+          title: 'Help',
           type: 'item',
-          url: '#',
-          icon: icons['BlockOutlinedIcon'],
-          disabled: true
-        },
-        {
-          id: 'documentation',
-          title: 'Documentation',
-          type: 'item',
-          url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          // url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          url:'/help',
           icon: icons['HelpOutlineOutlinedIcon'],
           chip: {
             label: 'Help?',
             color: 'primary'
           },
-          external: true,
-          target: true
+          // external: false,
+          // target: true
+        },
+        {
+          id: 'services',
+          title: 'Services',
+          type: 'item',
+          // url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          url:'/services',
+          icon: Handyman,
+          // external: false,
+          // target: true
         }
       ]
     }

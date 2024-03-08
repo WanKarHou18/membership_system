@@ -88,7 +88,7 @@ const MobileSection = () => {
                   <AppBar color="default">
                     <Toolbar>
                       <Grid container direction="row" justifyContent={matchMobile ? 'space-between' : 'flex-end'} alignItems="center">
-                        <SearchSection theme="dark" />
+                        {/* <SearchSection theme="dark" /> */}
                         <NotificationSection />
                         <ProfileSection />
                       </Grid>

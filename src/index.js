@@ -8,6 +8,9 @@ import 'assets/scss/style.scss';
 // third party
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import {UserAuthContextProvider} from './context/UserAuthContext'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 // project import
 import App from 'layout/App';
@@ -23,7 +26,11 @@ const root = createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <BrowserRouter basename={process.env.REACT_APP_BASE_NAME}>
-      <App />
+      <UserAuthContextProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <App />
+        </LocalizationProvider>
+      </UserAuthContextProvider>
     </BrowserRouter>
   </Provider>
 );
