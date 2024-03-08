@@ -12,6 +12,7 @@ import { gridSpacing } from 'config.js';
 
 import CustomerCard from './CustomerCard/customerCard';
 import MembershipCard from './MembershipCard/membershipCard';
+import FoodCakeMembershipCard from './FoodMembershipCard/membershipCard';
 
 import { getCustomerMembershipByUUID,deleteCustomerMembership } from 'api/customerMembership';
 
@@ -21,35 +22,23 @@ import { useUserAuth } from '../../context/UserAuthContext';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const items = [
-  { id: 1, name: 'Item 1' },
-  { id: 2, name: 'Item 2' },
-  { id: 3, name: 'Item 3' },
-  // ... more items
-];
-
-const membershipCardData =
-  {
-    avatar: "/avatar.png",
-    qr: "/qr.png",
-    displayName: "XYZ Membership",
-    tagline: "Entrepreneur",
-    title: "XYZ123",
-    phone: "+123-456-789",
-    mail: "m@spacex.com",
-    location: "United State , Califonia",
-    socials: [["twitter", "@elonmusk"], ["linkedin", "/in/elonmusk"]]
-  };
-
 const SamplePage = () => {
-  const [isOpenCardDialog, setOpenCardDialog] = useState(false);
+
+  const userEmail = localStorage.getItem('userEmail');
+
+  const initialDialogValues = {
+    isOpen: false,
+    selectedData: ''
+  }
+    
+  const [isOpenCardDialog, setOpenCardDialog] = useState(initialDialogValues);
   const [memberships,setMemberships]=useState(null);
 
   const {user} = useUserAuth();
 
   const getMemberships = async () => {
     try {
-        await getCustomerMembershipByUUID(user.email).then((result)=>{
+        await getCustomerMembershipByUUID(userEmail).then((result)=>{
           setMemberships(result)
         });
     } catch (error) {
@@ -61,7 +50,9 @@ const SamplePage = () => {
     if(user){
       getMemberships()
     }
-  },[])
+  },[
+    user
+  ])
 
   const handleDeleteMembership = async (membershipId) => {
     try {
@@ -74,7 +65,7 @@ const SamplePage = () => {
 
   const BreadcrumbSection =()=>{
     return(
-      <Breadcrumb title="Customer" sideIcon={<AddCard/>}>
+      <Breadcrumb title="Customer" sideIcon={<AddCard/>} passData={memberships}>
         <Typography component={Link} to="/" variant="subtitle2" color="inherit" className="link-breadcrumb">
           Home
         </Typography>
@@ -103,9 +94,12 @@ const SamplePage = () => {
       </Grid>
       <CustomDialog 
         showDialog={setOpenCardDialog} 
-        isShowDialog={isOpenCardDialog} 
-        dialogTitle={"Customer Membership Card"} 
-        content={<MembershipCard people={membershipCardData} />}
+        isShowDialog={isOpenCardDialog.isOpen} 
+        dialogTitle={"Customer Loyalty Card"} 
+        contentList={[
+          <MembershipCard data={isOpenCardDialog.selectedData} key={'membershipCard1'}/>,
+          <FoodCakeMembershipCard data={isOpenCardDialog.selectedData} key={'membershipCard2'}/>
+        ]}
       />
     </>
   );

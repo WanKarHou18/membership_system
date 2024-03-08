@@ -4,7 +4,7 @@ import {db} from '../../config'
 const CUSTOMER_MEMBERSHIP = 'CustomerMembership';
 
 export class CustomerMembership {
-  constructor(uuid, customerName, membershipId, pointToReach, currentPoint, expiryDate, startDate, duration,membershipCode,status) {
+  constructor(uuid, customerName, membershipId, pointToReach, currentPoint, expiryDate, startDate, duration,membershipCode,status,reward) {
     this.uuid = uuid; //uuid refer to email of current user.
     this.customerName = customerName;
     this.membershipId = membershipId;
@@ -12,6 +12,7 @@ export class CustomerMembership {
     this.currentPoint = currentPoint;
     this.expiryDate = expiryDate;
     this.startDate = startDate;
+    this.reward = reward;
     this.duration = duration;
     this.membershipCode = membershipCode;//Unique generated.
     this.status = status;
@@ -63,10 +64,12 @@ export const getCustomerMemberships= async () => {
           membershipData.startDate,
           membershipData.duration,
           membershipData.membershipCode,
-          membershipData.status
+          membershipData.status,
+          membershipData.reward
         );
         memberships.push(customerMembership)
       });
+
       return memberships;
     } catch (error) {
       console.log('HIHI',error)
@@ -98,12 +101,14 @@ export const getCustomerMembershipByUUID = async (uuid) => {
         membershipData.startDate,
         membershipData.duration,
         membershipData.membershipCode,
-        membershipData.status
+        membershipData.status,
+        membershipData.reward
       );
       if(customerMembership.uuid === uuid){
         memberships.push(customerMembership)
       }
     });
+    console.log('memberships...', memberships)
     return memberships;
   } catch (error) {
     console.log('HIHI',error)

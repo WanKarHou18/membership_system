@@ -21,19 +21,29 @@ export const Contact = (props) => {
     e.preventDefault();
     console.log(name, email, message);
     
+    const subject = name;
+    const body = message + '  ' + 'contact me via email:' + email;
+    const senderEmail = 'frenz7434@gmail.com';
+
+    // Construct the mailto: URL
+    const mailtoUrl = `mailto:${senderEmail}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+    // Open the default email client
+    window.location.href = mailtoUrl;
+    
     {/* replace below with your own Service ID, Template ID and Public Key from your EmailJS account */ }
     
-    emailjs
-      .sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", e.target, "YOUR_PUBLIC_KEY")
-      .then(
-        (result) => {
-          console.log(result.text);
-          clearState();
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
+    // emailjs
+    //   .sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", e.target, "YOUR_PUBLIC_KEY")
+    //   .then(
+    //     (result) => {
+    //       console.log(result.text);
+    //       clearState();
+    //     },
+    //     (error) => {
+    //       console.log(error.text);
+    //     }
+    //   );
   };
   return (
     <div>
@@ -108,14 +118,14 @@ export const Contact = (props) => {
                 {props.data ? props.data.address : "loading"}
               </p>
             </div>
-            <div className="contact-item">
+            {/* <div className="contact-item">
               <p>
                 <span>
                   <i className="fa fa-phone"></i> Phone
                 </span>{" "}
                 {props.data ? props.data.phone : "loading"}
               </p>
-            </div>
+            </div> */}
             <div className="contact-item">
               <p>
                 <span>
@@ -124,17 +134,25 @@ export const Contact = (props) => {
                 {props.data ? props.data.email : "loading"}
               </p>
             </div>
+            <div className="contact-item">
+              <p>
+                <span>
+                  <i className="fa fa-info-circle" aria-hidden="true"></i> Help 
+                </span>{" "}
+                <span style={{color:'white'}}><a href="/help">FAQ</a></span>
+              </p>
+            </div>
           </div>
           <div className="col-md-12">
             <div className="row">
               <div className="social">
                 <ul>
-                  <li>
+                  {/* <li>
                     <a href={props.data ? props.data.facebook : "/"}>
                       <i className="fa fa-facebook"></i>
                     </a>
-                  </li>
-                  <li>
+                  </li> */}
+                  {/* <li>
                     <a href={props.data ? props.data.twitter : "/"}>
                       <i className="fa fa-twitter"></i>
                     </a>
@@ -143,7 +161,7 @@ export const Contact = (props) => {
                     <a href={props.data ? props.data.youtube : "/"}>
                       <i className="fa fa-youtube"></i>
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -153,10 +171,10 @@ export const Contact = (props) => {
       <div id="footer">
         <div className="container text-center">
           <p>
-            &copy; 2023 Issaaf Kattan React Land Page Template. Design by{" "}
-            <a href="http://www.templatewire.com" rel="nofollow">
-              TemplateWire
-            </a>
+            &copy; 2024 FRENZ.
+            {/* <a href="http://www.templatewire.com" rel="nofollow">
+              FRENZ
+            </a> */}
           </p>
         </div>
       </div>

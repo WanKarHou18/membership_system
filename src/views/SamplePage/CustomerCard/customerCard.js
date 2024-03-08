@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 
 //third-party
-import { Card, CardContent, Typography, Button, Divider, CardHeader, Grid,LinearProgress, IconButton} from '@mui/material';
+import { Card, CardContent, Typography, Button, Divider, CardHeader, Grid,LinearProgress, IconButton, Tooltip} from '@mui/material';
 import styled from '@emotion/styled';
 import { useTheme } from '@mui/material/styles';
 import { Edit,CreditCard,Delete } from '@mui/icons-material';
@@ -19,10 +19,16 @@ const StyledMuiButton = styled(Button)`
   }
 `;
 
+const STATUSES = {
+  ACTIVE: 'Active',
+  NON_ACTIVE: 'Non-Active'
+
+}
 const CustomerCard = ({showDialog,data,deleteMembership}) => {
 
   const navigate = useNavigate();
   const theme = useTheme();
+
   const customerNameDisplay=()=>{
     return(
       <Typography variant="h4"sx={{ color: theme.palette.primary.main }}>
@@ -31,7 +37,7 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
     )
   }
 
-  const statusDisplay= ()=>{
+  const statusDisplay = () => {
     return(
       <Grid container alignItems="center" spacing={1}>
         <Grid item>
@@ -40,7 +46,7 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
           </Typography>
         </Grid>
         <Grid item sm zeroMinWidth>
-          <Typography variant="h6" sx={{ color: theme.palette.success.main }} align="right">
+          <Typography variant="h6" sx={{ color: data.status === STATUSES.ACTIVE?theme.palette.success.main: theme.palette.error.main}} align="right">
             {data.status}
           </Typography>
         </Grid>
@@ -83,6 +89,8 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
   }
 
   const pointsProgress =()=>{
+    console.log('currentPoint',parseInt(data.currentPoint));
+    console.log('pointToReach',parseInt(data.pointToReach))
     return(
       <Grid item xs={12}>
         <Grid container alignItems="center" spacing={1}>
@@ -95,7 +103,7 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <LinearProgress variant="determinate" aria-label="Referral" value={20} color="primary" />
+              <LinearProgress variant="determinate" value={(parseInt(data.currentPoint)/parseInt(data.pointToReach))*100} color="primary" />
           </Grid>
         </Grid>
       </Grid>
@@ -125,7 +133,7 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
                 <IconButton onClick={()=>navigate("/edit-membership-form", {state:membershipData})}>
                   <Edit/>
                 </IconButton>
-                <IconButton onClick={()=>showDialog(true)}>
+                <IconButton onClick={()=>showDialog({isOpen: true, selectedData: data})}>
                   <CreditCard/>
                 </IconButton>
                 <IconButton onClick={()=>deleteMembership(data.membershipId)}>

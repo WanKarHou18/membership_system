@@ -7,5 +7,5 @@ import AuthenticationRoutes from './AuthenticationRoutes';
 
 export default function ThemeRoutes() {
   const { user } = useUserAuth();
-  return useRoutes(user?[MainRoutes]: [AuthenticationRoutes]);
+  return useRoutes(user?MainRoutes: [AuthenticationRoutes]);
 }

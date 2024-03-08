@@ -19,7 +19,9 @@ import {
   IconButton,
   Popover,
   Select,
-  MenuItem
+  MenuItem,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 
 //  third party
@@ -41,39 +43,127 @@ import Google from 'assets/images/social-google.svg';
 import Breadcrumb from 'component/Breadcrumb';
 import { validationSchema } from './validation';
 import { useUserAuth } from "../../context/UserAuthContext";
-import { CustomerMembership,addCustomerMembership } from 'api/customerMembership';
+import { CustomerMembership,addCustomerMembership, getCustomerMembershipByUUID} from 'api/customerMembership';
 import { useNavigate } from 'react-router-dom';
+import { generateUniqueMembershipCode, verifyIsNotOverLimit} from 'helper/membershipHelper';
+import AlertInfo from 'component/AlertInfo';
+import { alertMessages } from 'constants/alertMessages.constants';
+import { MEMBERSHIP_CODE_LENGTH} from 'constants/memberships.constants';
+
 // ==============================|| FIREBASE LOGIN ||============================== //
 
-const NewMembershipForm = ({ isEdit,...rest }) => {
+const NEW_MEMBERSHIPS = 'NEW_MEMBERSHIPS';
+
+const alertMessage = alertMessages[NEW_MEMBERSHIPS]
+
+const initialAlertMessageValues = {
+  alertMessage: '',
+  isDisplay: false,
+}
+
+const isStartDateValid = (startDate, endDate) => {
+  return dayjs(startDate).isBefore(dayjs(endDate)) ;
+};
+
+const BreadcrumbSection =()=>{
+  return(
+    <Breadcrumb title="Loyalty Card">
+      <Typography component={Link} to="/" variant="subtitle2" color="inherit" className="link-breadcrumb">
+        Home
+      </Typography>
+      <Typography component={Link} to="/customer" variant="subtitle2" color="inherit" className="link-breadcrumb">
+        Customer
+      </Typography>
+      <Typography variant="subtitle2" color="primary" className="link-breadcrumb">
+        LoyaltyCard
+      </Typography>
+  </Breadcrumb>
+  )
+}
+
+const NewMembershipForm = (props) => {
+  const {isEdit, ...rest} = props;
   const theme = useTheme();
   const { user } = useUserAuth();
   const navigate = useNavigate();
-  const statuses = ['Active','Close']
+
+  const statuses = ['Active','Non-Active']
+  
+  const [memberships,setMemberships]=useState(null);
   const [startDate,setStartDate]=useState(new Date());
   const [endDate,setEndDate]=useState(new Date());
   const customerMembership = new CustomerMembership();
+  const [isAlert, setAlert] = useState(initialAlertMessageValues);
 
-  const generateAndSetupMembershipCode=()=>{
-    return 'Hello'
-  }
-  const code = generateAndSetupMembershipCode();
+  const getMemberships = async () => {
+    try {
+        await getCustomerMembershipByUUID(user.email).then((result)=>{
+          setMemberships(result)
+        });
+    } catch (error) {
+        setMemberships(null);
+    }
+  };
+
+  useEffect(()=>{
+    if(user){
+      getMemberships()
+    }
+  },[])
+
+  useEffect(() => {
+    if (isAlert.isDisplay) {
+      const timer = setTimeout(() => { 
+        setAlert((prev) => {
+          return {
+            ...prev,
+            isDisplay:false,
+          }
+        });
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isAlert]);
+
+  // console.log('Sample Memberships...', memberships.length);
+
+  const code = generateUniqueMembershipCode(MEMBERSHIP_CODE_LENGTH);
 
   const handleSubmitMemberShipForm= async(values)=>{
-    customerMembership.uuid=user.email;
-    customerMembership.customerName=values.customerName;
-    customerMembership.membershipId="123";
-    customerMembership.pointToReach=values.pointsToReach;
-    customerMembership.currentPoint=values.currentPoint;
-    customerMembership.expiryDate=endDate;
-    customerMembership.startDate=startDate;
-    customerMembership.duration='';
-    customerMembership.membershipCode='12345';
-    customerMembership.status=values.newMemberStatus;
-    console.log('HAHA',customerMembership)
-    addCustomerMembership(customerMembership);
-    navigate('/customer')
+    try {
+      if(isStartDateValid(startDate, endDate)){
+        customerMembership.uuid = user.email;
+        customerMembership.customerName = values.customerName;
+        customerMembership.pointToReach = values.pointsToReach;
+        customerMembership.currentPoint = values.currentPoint;
+        customerMembership.expiryDate = dayjs(endDate).format('YYYY-MM-DD');
+        customerMembership.startDate =dayjs(startDate).format('YYYY-MM-DD') ;
+        customerMembership.duration = '';
+        customerMembership.membershipCode = code;
+        customerMembership.reward = values.reward;
+        customerMembership.status = values.newMemberStatus;
+        setAlert({
+          alertMessage: alertMessage['SUCCESS'],
+          isDisplay: true,
+        })
+        addCustomerMembership(customerMembership);
+        navigate('/customer')
+      }else{
+        setAlert({
+          alertMessage: alertMessage['STARTDATE_NOT_VALID'],
+          isDisplay: true,
+        })
+      }
+    } catch (error) {
+      setAlert({
+        alertMessage: alertMessage['FAILURE'],
+        isDisplay: true,
+      })
+      console.log('Add loyalty card error...',error)
+    }
   }
+  
 /*Refer:https://formik.org/docs/api/useFormikContext */
 const AutoSetField = () => {
   const { user } = useUserAuth();
@@ -83,22 +173,6 @@ const AutoSetField = () => {
   }, [user]);
   return null;
 };
-
-  const BreadcrumbSection =()=>{
-    return(
-      <Breadcrumb title="Membership Form">
-        <Typography component={Link} to="/" variant="subtitle2" color="inherit" className="link-breadcrumb">
-          Home
-        </Typography>
-        <Typography component={Link} to="/customer" variant="subtitle2" color="inherit" className="link-breadcrumb">
-          Sample Page
-        </Typography>
-        <Typography variant="subtitle2" color="primary" className="link-breadcrumb">
-          MembershipForm
-        </Typography>
-    </Breadcrumb>
-    )
-  }
 
   return (
     <>
@@ -112,6 +186,7 @@ const AutoSetField = () => {
           pointsToReach:'',
           currentPoint:'',
           newMemberStatus:'',
+          reward: '',
           submit: null
         }}
         onSubmit={handleSubmitMemberShipForm}
@@ -147,13 +222,13 @@ const AutoSetField = () => {
                   color: 'secondary',
                 },
               }}
-              onChange={(value)=>setStartDate(dayjs(value, 'DD/MM/YYYY'))}
+              onChange={(value)=>setStartDate(value)}
             />
             <FormControl fullWidth sx={{ mt: theme.spacing(3), mb: theme.spacing(1) }}>
                 <TextField
                 fullWidth
                 disabled={true}
-                label="Membership Code (auto generated)"
+                label="Loyalty Code (auto generated)"
                 margin="normal"
                 name="membershipCode"
                 type="membershipCode"
@@ -177,7 +252,7 @@ const AutoSetField = () => {
                   color: 'secondary',
                 },
               }}
-              onChange={(value)=>setEndDate(dayjs(value, 'DD/MM/YYYY'))}
+              onChange={(value) => setEndDate(value)}
             />
             <TextField
               error={Boolean(touched.pointsToReach && errors.pointsToReach)}
@@ -207,6 +282,20 @@ const AutoSetField = () => {
               variant="outlined"
               placeholder="example: 10"
             />
+            <TextField
+              error={Boolean(touched.reward && errors.reward)}
+              fullWidth
+              helperText={touched.reward && errors.reward}
+              label="Reward"
+              margin="normal"
+              name="reward"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              type="reward"
+              value={values.reward}
+              variant="outlined"
+              placeholder="example: Free 1 Hamburger"
+            />
             <AutoSetField/>
             <FormControl fullWidth>
               <InputLabel id="status-select-label">Status</InputLabel>
@@ -234,13 +323,14 @@ const AutoSetField = () => {
             )}
 
             <Box mt={2}>
-              <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
+              <Button color="primary" disabled={isSubmitting || !(verifyIsNotOverLimit(memberships))} fullWidth size="large" type="submit" variant="contained">
                 Add
               </Button>
             </Box>
           </form>
         )}
       </Formik>
+      { isAlert.isDisplay && <AlertInfo setAlert={setAlert} isAlert={isAlert}/> }
     </>
   );
 };

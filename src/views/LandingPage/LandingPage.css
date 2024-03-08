@@ -224,12 +224,14 @@ a:focus,
 }
 /* Header Section */
 .intro {
+  font-family: cursive !important;
   display: table;
   width: 100%;
   padding: 0;
-  /* background: rgba(229, 229, 229, 0.2) url(./img/loyalty-card-background.jpg) center center no-repeat; */
-  background: linear-gradient(to bottom, #f0f0f0, #d9d9d9);
+  background: rgba(229, 229, 229, 0.2) url(../../assets/images/landingPage/loyalty_card_purple_star_background.png) center center no-repeat;
+  /* background: linear-gradient(to bottom, #f0f0f0, #d9d9d9); */
   /* background-color: #e5e5e5; */
+  background-size: 'cover';
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
@@ -237,10 +239,10 @@ a:focus,
   /* opacity: 0.7; */
 }
 .intro .overlay {
-  background: rgba(0, 0, 0, 0.2);
+  /* background: rgba(0, 0, 0, 0.2); */
 }
 .intro h1 {
-  font-family: "Raleway", sans-serif;
+  /* font-family: "Raleway", sans-serif; */
   /* color: #fff; */
   color: black;
   font-size: 82px;
@@ -268,7 +270,7 @@ header .intro-text {
 }
 /* Features Section */
 #features {
-  background: #f6f6f6;
+  background: azure
 }
 #features i.fa {
   font-size: 38px;

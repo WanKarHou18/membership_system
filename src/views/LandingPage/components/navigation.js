@@ -1,7 +1,9 @@
 import React from "react";
 import { websiteTitle } from "config";
-
+import { useUserAuth } from "context/UserAuthContext";
 export const Navigation = (props) => {
+  const {user} = useUserAuth();
+  console.log('User...',user)
   return (
     <nav id="menu" className="navbar navbar-default navbar-fixed-top">
       <div className="container">
@@ -18,7 +20,7 @@ export const Navigation = (props) => {
             <span className="icon-bar"></span>{" "}
             <span className="icon-bar"></span>{" "}
           </button>
-          <a className="navbar-brand page-scroll" href="#page-top">
+          <a className="navbar-brand page-scroll" href="/">
             {websiteTitle}
           </a>{" "}
         </div>
@@ -38,11 +40,11 @@ export const Navigation = (props) => {
                 About
               </a>
             </li>
-            <li>
+            {/* <li>
               <a href="#services" className="page-scroll">
                 Services
               </a>
-            </li>
+            </li> */}
             {/* <li>
               <a href="#portfolio" className="page-scroll">
                 Gallery
@@ -53,21 +55,24 @@ export const Navigation = (props) => {
                 Testimonials
               </a>
             </li> */}
-            <li>
+            {/* <li>
               <a href="#team" className="page-scroll">
                 Team
               </a>
-            </li>
+            </li> */}
             <li>
               <a href="#contact" className="page-scroll">
                 Contact
               </a>
             </li>
-            <li>
+            { !user && 
+              <li>
               <a href="/register" className="page-scroll" style={{fontWeight:'bold'}}>
                 Login / Register
               </a>
             </li>
+            }
+
           </ul>
         </div>
       </div>

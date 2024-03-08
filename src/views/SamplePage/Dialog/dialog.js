@@ -8,7 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Download } from '@mui/icons-material';
 import {Typography,IconButton,Grid} from '@mui/material';
 import html2canvas from 'html2canvas';
-
 const downloadCardAsImage = () => {
   const cardElement = document.getElementById('myCard'); // Replace 'myCard' with the actual ID or class of your card component
 
@@ -34,47 +33,63 @@ const downloadCardAsImage = () => {
  * @param {*} content
  * @returns 
  */
-const CustomDialog = ({showDialog,isShowDialog,content,dialogTitle}) => {
+const CustomDialog = ({ showDialog, isShowDialog, contentList, dialogTitle }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = contentList.length ;
 
   const dialogStyle = {
     // Add your custom styles here
     // width: '30rem',
     // minHeight: '30rem',
-
   };
 
-  const dialogContentStyle={
+  const dialogContentStyle = {
     display: 'flex',
     justifyContent: 'center',
-    padding: '10px'
-  }
+    padding: '10px',
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   const handleClose = () => {
-    showDialog(false);
+    showDialog({
+      isOpen: false,
+      selectedData: '',
+    });
   };
+
   return (
     <div>
-      <Dialog open={isShowDialog} onClose={handleClose} style={dialogStyle} >
-        <DialogTitle style={{ backgroundColor: '#2196F3', color: '#ffffff'}}>
+      <Dialog open={isShowDialog} onClose={handleClose} style={dialogStyle}>
+        <DialogTitle style={{ backgroundColor: '#2196F3', color: '#ffffff' }}>
           <Grid container spacing={1} justifyContent="space-between">
-            <Typography style={{display:'flex',justifyContent:'center'}}>
+            <Typography style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {dialogTitle}
             </Typography>
-            <IconButton >
-              <Download  onClick={downloadCardAsImage}/>
-            </IconButton>
+              <Download onClick={downloadCardAsImage} />
           </Grid>
         </DialogTitle>
         <DialogContent style={dialogContentStyle}>
-          <DialogContentText>
-            {content}
-          </DialogContentText>
+          <DialogContentText>{contentList[currentPage-1]}</DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button onClick={handlePrevPage} color="primary" disabled={currentPage === 1}>
+            Prev
+          </Button>
+          <Typography>{`${currentPage} of ${totalPages}`}</Typography>
+          <Button onClick={handleNextPage} color="primary" disabled={currentPage === totalPages}>
+            Next
+          </Button>
           <Button onClick={handleClose} color="primary">
             Close
           </Button>
-        </DialogActions>s
+        </DialogActions>
       </Dialog>
     </div>
   );

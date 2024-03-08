@@ -10,7 +10,7 @@ import Chart from 'react-apexcharts';
 
 // ==============================|| REVENUE CHART CARD ||============================== //
 
-const RevenuChartCard = ({ chartData }) => {
+const RevenuChartCard = ({title, chartData, footerData }) => {
   const theme = useTheme();
 
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -21,7 +21,7 @@ const RevenuChartCard = ({ chartData }) => {
       <CardHeader
         title={
           <Typography t="div" className="card-header">
-            Total Revenue
+             {title}
           </Typography>
         }
       />
@@ -44,32 +44,18 @@ const RevenuChartCard = ({ chartData }) => {
             sm={5}
             md={12}
           >
-            <Grid item>
-              <Grid container direction="column">
-                <Typography variant="h6">Youtube</Typography>
-                <Typography variant="subtitle1" sx={{ color: theme.palette.primary.main }}>
-                  + 16.85%
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="column">
-                <Typography variant="h6">Facebook</Typography>
-                <Box color={theme.palette.success.main}>
-                  <Typography variant="subtitle1" color="inherit">
-                    +45.36%
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid container direction="column">
-                <Typography variant="h6">Twitter</Typography>
-                <Typography variant="subtitle1" sx={{ color: theme.palette.warning.main }}>
-                  - 50.69%
-                </Typography>
-              </Grid>
-            </Grid>
+            {
+              footerData && footerData.map((data,index)=>(
+                <Grid item key={'dashboard_capacityChart_footer'+index}>
+                  <Grid container direction="column">
+                    <Typography variant="h6">{data.label}</Typography>
+                    <Typography variant="subtitle1" sx={{ color: data.color}} style={{justifyContent:'center', display:'flex'}}>
+                      {(data.data.toFixed(2))}%
+                    </Typography>
+                  </Grid>
+                </Grid>
+              ))
+            }
           </Grid>
         </Grid>
       </CardContent>

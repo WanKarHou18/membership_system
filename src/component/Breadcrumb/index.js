@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 
 // ==============================|| BREADCRUMB ||============================== //
 
-const Breadcrumbs = ({ title, divider, isCard, sideIcon,url,...rest }) => {
+const Breadcrumbs = ({ title, divider, isCard, sideIcon,url,passData,...rest }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   return (

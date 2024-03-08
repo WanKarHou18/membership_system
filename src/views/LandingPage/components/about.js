@@ -6,6 +6,7 @@ import '../public/css/bootstrap.css';
 import loyaltyBackground from '../img/loyalty-card-background.jpg';
 import adminPanel from '../img/admin-panel.jpg';
 import loyaltyCard from '../img/loyalty-card.jpg';
+import converstation from '../img/whatsapp_conversation.png';
 
 export const About = (props) => {
   return (
@@ -28,7 +29,7 @@ export const About = (props) => {
           <div className="col-xs-12 col-md-6" style={{paddingTop:'20vh'}}>
             <div className="about-text">
               <h2>What Can Frenz Do for You?</h2>
-              <p>{props.data ? props.data.paragraph : "loading..."}</p>
+              <p>{props.data ? props.data.paragraph1 : "loading..."}</p>
             </div>
           </div>
           <div className="col-xs-12 col-md-6">
@@ -44,11 +45,25 @@ export const About = (props) => {
           </div>
           <div className="col-xs-12 col-md-6"style={{paddingTop:'10vh'}}>
             <div className="about-text">
-              <h2>Virtual Customer Loyalty Card</h2>
-              <p>{props.data ? props.data.paragraph : "loading..."}</p>
+              <h2>Simple and beautiful dashboard</h2>
+              <p>{props.data ? props.data.paragraph2 : "loading..."}</p>
             </div>
           </div>
         </div>
+
+        <div className="row" style={{paddingTop:'10vh'}}>
+          <div className="col-xs-12 col-md-6" style={{paddingTop:'10vh'}}>
+            <div className="about-text">
+              <h2>Share card with customer</h2>
+              <p>{props.data ? props.data.paragraph3 : "loading..."}</p>
+            </div>
+          </div>
+          <div className="col-xs-12 col-md-6">
+            {" "}
+            <img src={converstation} className="img-responsive" alt="" />{" "}
+          </div>
+        </div>
+
       </div>
     </div>
   );

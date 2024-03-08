@@ -24,10 +24,11 @@ import '../../../../node_modules/react-datepicker/dist/react-datepicker.css'
 const searchOptions = {
    'All': {name:'All', searchBoxType:'none'},
    'Customer Name':{name:'Customer Name',searchBoxType:'SearchInput',options:[]},
-   'Promo Code':{name:'Promo Code',searchBoxType:'SearchInput',options:[]},
-  //  'Expiry Date':{name:'Expiry Date',searchBoxType:'DatePicker',options:[]},
+   'Membership Code':{name:'Promo Code',searchBoxType:'SearchInput',options:[]},
+   'Expiry Date':{name:'Expiry Date',searchBoxType:'DatePicker',options:[]},
   //  'Start Date':{name:'Start Date',searchBoxType:'DatePicker',options:[]},
-   'Status': {name:'Status', searchBoxType:'DropDown', options:['None','Active','Close']},
+   'Status': {name:'Status', searchBoxType:'DropDown', options:['None','Active','Non-Active']},
+   'Expired In Next Few Days': {name:'Expired In Next Few Days', searchBoxType:'DropDown', options:['None','7 Days','20 Days','this month']},
 }
 
 const DropdownSelect = ({labelId, id, value, handleChange,data})=>{
@@ -58,8 +59,7 @@ const SearchSection = (props) => {
 
   const [searchWord,setSearchWord]=useState();
   const [searchStatus,setSearchStatus]=useState(searchOptions['Status'].options[0])
-  const [searchDate,setSearchDate]=useState(new Date());
-  const [filterMembership,setFilterMemberships]=useState();
+  const [searchExpiryOption, setSearchExpiryOption] = useState(searchOptions['Expired In Next Few Days'].options[0])
 
   const {user} = useUserAuth();
 
@@ -75,46 +75,77 @@ const SearchSection = (props) => {
 
   useEffect(()=>{
     if(user){
-      console.log('Access Here')
       getMemberships()
     }
   },[
     searchOption,
   ])
 
-  const handleSearchOption=(event)=>{
-    setSearchOption(event.target.value);
-    setData(membershipsData)
-  }
+  const submitSearch = (searchOption, event) =>{
 
-  const handleSearchInputSubmit=()=>{
-    console.log('Data',data)
-    if(searchWord!=''){
-      console.log('Submit-searchOption',searchOption)
-      console.log('Submit-data',dayjs(data))
-      console.log('Submit-searchWord',searchWord)
-      console.log('filterMembership',filterMemberships(searchOption,searchWord,dayjs(data)));
-      // setData()
+    let filteredMemberships;
+    console.log('Search Option...', searchOption)
+    switch (searchOption) {
+      case 'Customer Name':{
+        const searchInput = document.getElementById('searchInputField');
+        //TODO: Clear searchInput
+        if(searchInput.value != ''){
+          filteredMemberships = filterMemberships(searchOption,searchInput.value,membershipsData)
+          console.log('Here...',filteredMemberships)
+          setData(filteredMemberships)
+        }
+        break;
+      }
+
+      case 'Membership Code':{
+        const searchInput = document.getElementById('searchInputField');
+        //TODO: Clear searchInput
+        if(searchInput.value != ''){
+          filteredMemberships = filterMemberships(searchOption,searchInput.value,membershipsData)
+          console.log('Here...',filteredMemberships)
+          setData(filteredMemberships)
+        }
+        break;
+      }
+
+      case 'Status':{
+        setSearchStatus(event.target.value)
+        if(event.target.value != 'None'){
+          setData(filterMemberships(searchOption,event.target.value,membershipsData))
+        }
+        break;
+      }
+
+      case 'All':{
+        setSearchOption(event.target.value);
+        setData(membershipsData);
+        break;
+      }
+
+      case 'Expiry Date':{
+        const parsedDate = dayjs(event).format('YYYY-MM-DD');
+        filteredMemberships = filterMemberships(searchOption,parsedDate ,membershipsData)
+        setData(filteredMemberships)
+        break;
+      }
+
+      case 'Expired In Next Few Days':{
+        setSearchExpiryOption(event.target.value)
+        if(event.target.value != 'None'){
+          setData(filterMemberships(searchOption,event.target.value,membershipsData))
+        }
+        break;
+      }
+
+       
+      default: {// For options selection change, in this case we used 'root'
+        setSearchOption(event.target.value);
+        setData(membershipsData);
+        break;
+      }
+
     }
   }
-
-  const handleStatusSearchSubmit=(event)=>{
-    setSearchStatus(event.target.value)
-    if(event.target.value != 'None'){
-      setData(filterMemberships(searchOption,event.target.value,membershipsData))
-    }
-  }
-  
-  const handleDateSearchSubmit=(value)=>{
-    const parsedDate = dayjs(value, 'DD/MM/YYYY');
-    setData(filterMemberships(searchOption,parsedDate,data))
-  }
-
-  const onChangeSearchWord = (event)=>{
-    console.log('Search Word',event.target.value)
-    setSearchWord(event.target.value);
-  }
-
   const SearchInput = ()=>{
     return(
       <>
@@ -255,20 +286,20 @@ const SearchSection = (props) => {
             <SearchTwoToneIcon />
           </Box>
           <InputBase
+            id="searchInputField"
+            fullWidth
             placeholder="Search…"
-            onChange={(e) => setSearchWord(e.target.value)}
             sx={{
               '& .MuiInputBase-root': {
-                color: 'inherit',
-                mr: 3
+                color: 'inherit'
               },
               '& .MuiInputBase-input': {
-                p: theme.spacing(1, 1, 1, 0),
-                pl: `calc(1em + ${theme.spacing(4)})`,
+                padding: theme.spacing(1, 1, 1, 0),
+                paddingLeft: `calc(1em + ${theme.spacing(4)})`,
                 transition: theme.transitions.create('width'),
                 color: 'black',
                 width: { sm: '100%', md: 125 },
-                mr: { md: 3 },
+                mr: 3,
                 '&:focus': {
                   width: { md: 225 }
                 }
@@ -289,7 +320,7 @@ const SearchSection = (props) => {
         backgroundColor="primary" 
         variant="contained"
         size="small"
-        onClick={()=>handleSearchInputSubmit()}
+        onClick={()=>submitSearch(searchOption,'')}
       >
         Search
       </Button>
@@ -301,7 +332,7 @@ const SearchSection = (props) => {
         labelId="dropdown-label"
         id="dropdown"
         value={searchOption}
-        handleChange={handleSearchOption}
+        handleChange={(event)=>submitSearch('root',event)}
         label="Select an Option"
         data={searchOptionsName}
       />
@@ -310,14 +341,28 @@ const SearchSection = (props) => {
         <SearchInput/>
       }
       {
-      searchOptions[searchOption].searchBoxType === 'DropDown' &&
+      searchOptions[searchOption].searchBoxType === 'DropDown' && searchOption === 'Status' &&
       <>
         &nbsp;&nbsp;
         <DropdownSelect
           labelId="status-label"
           id="statusdropdown"
           value={searchStatus}
-          handleChange={handleStatusSearchSubmit}
+          handleChange={(event)=>submitSearch(searchOption,event)}
+          label="Select an Option"
+          data={searchOptions[searchOption].options}
+        />
+      </>
+    }
+    {
+      searchOptions[searchOption].searchBoxType === 'DropDown' && searchOption === 'Expired In Next Few Days' &&
+      <>
+        &nbsp;&nbsp;
+        <DropdownSelect
+          labelId="status-label"
+          id="statusdropdown"
+          value={searchExpiryOption}
+          handleChange={(event)=>submitSearch(searchOption,event)}
           label="Select an Option"
           data={searchOptions[searchOption].options}
         />
@@ -342,7 +387,7 @@ const SearchSection = (props) => {
               color: 'secondary',
             },
           }}
-          onChange={(value)=>handleDateSearchSubmit(value)}
+          onChange={(value)=>submitSearch(searchOption,value)}
         />
       </>
     }

@@ -9,7 +9,8 @@ import { Card, CardContent, Typography, Grid } from '@mui/material';
 import AuthLogin from './FirebaseLogin';
 
 // assets
-import Logo from 'assets/images/logo-dark.svg';
+// import Logo from 'assets/images/logo-dark.svg';
+import Logo from 'assets/images/logo.png'
 
 // ==============================|| LOGIN ||============================== //
 
@@ -53,7 +54,7 @@ const Login = () => {
                   </Grid>
                   <Grid item>
                     <RouterLink to="/">
-                      <img alt="Auth method" src={Logo} />
+                      <img alt="Auth method" src={Logo} width={80}/>
                     </RouterLink>
                   </Grid>
                 </Grid>

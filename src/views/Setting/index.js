@@ -20,16 +20,20 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { LOYALTY_CARD_LIMIT } from 'constants/memberships.constants';
 
 //  third party
 import * as Yup from 'yup';
 import { Formik,Field,useField, useFormikContext} from 'formik';
 import '../../../node_modules/react-datepicker/dist/react-datepicker.css'
-import { getAuth, updateProfile } from "firebase/auth";
+import { getAuth, updateProfile} from "firebase/auth";
+import { auth } from 'config';
+import { useNavigate } from 'react-router-dom';
 
 // project import
 import Breadcrumb from 'component/Breadcrumb';
 import { useUserAuth } from "../../context/UserAuthContext";
+import { validationSchema } from './validation';
 
 
 // ==============================|| SETTING WITH FIREBASE ||============================== //
@@ -47,7 +51,7 @@ const AutoSetField = () => {
 const SettingPage = ({ isEdit,...rest }) => {
   const theme = useTheme();
   const { user } = useUserAuth();
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmitSaveSetting= async(values)=>{
     console.log('values',values.username)
@@ -55,20 +59,14 @@ const SettingPage = ({ isEdit,...rest }) => {
       displayName: values.username
     }).then(() => {
       console.log('updateProfileSuccess', auth.currentUser)
+      navigate("/")
     }).catch((error) => {
       // An error occurred
       // ...
+      console.log('updateProfileError...', error)
     });
     
   }
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   const BreadcrumbSection =()=>{
     return(
@@ -93,7 +91,7 @@ const SettingPage = ({ isEdit,...rest }) => {
           email:'', //Not changeable
         }}
         onSubmit={handleSubmitSaveSetting}
-        // validationSchema={Yup.object().shape(validationSchema)}
+        validationSchema={Yup.object().shape(validationSchema)}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...rest}>
@@ -102,7 +100,7 @@ const SettingPage = ({ isEdit,...rest }) => {
               error={Boolean(touched.username && errors.username)}
               fullWidth
               helperText={touched.username && errors.username}
-              label="Username"
+              label="Username / Shop Name"
               margin="normal"
               name="username"
               onBlur={handleBlur}
@@ -126,37 +124,20 @@ const SettingPage = ({ isEdit,...rest }) => {
                 variant="outlined"
                 />
             </FormControl>
-            <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ mt: theme.spacing(3), mb: theme.spacing(1) }}>
-              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={showPassword ? 'text' : 'password'}
-                value={values.password}
-                name="password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                label="Password"
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      size="large"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {touched.password && errors.password && (
-                <FormHelperText error id="standard-weight-helper-text">
-                  {' '}
-                  {errors.password}{' '}
-                </FormHelperText>
-              )}
+
+            <FormControl fullWidth sx={{ mt: theme.spacing(3), mb: theme.spacing(1) }}>
+                <TextField
+                fullWidth
+                disabled={true}
+                label="Loyalty Card Limit"
+                margin="normal"
+                name="loyaltyCardLimit"
+                type="loyaltyCardLimit"
+                value={LOYALTY_CARD_LIMIT}
+                variant="outlined"
+                />
             </FormControl>
+
             {errors.submit && (
               <Box mt={3}>
                 <FormHelperText error>{errors.submit}</FormHelperText>

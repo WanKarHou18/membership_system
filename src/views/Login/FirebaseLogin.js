@@ -66,7 +66,7 @@ const FirebaseLogin = ({ ...rest }) => {
 
   return (
     <>
-      <Grid container justifyContent="center">
+      {/* <Grid container justifyContent="center">
         <Grid item xs={12}>
           <Button
             fullWidth={true}
@@ -97,15 +97,15 @@ const FirebaseLogin = ({ ...rest }) => {
             Sign in with Google
           </Button>
         </Grid>
-      </Grid>
+      </Grid> */}
 
-      <Box alignItems="center" display="flex" mt={2}>
+      {/* <Box alignItems="center" display="flex" mt={2}>
         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
         <Typography color="textSecondary" variant="h5" sx={{ m: theme.spacing(2) }}>
           OR
         </Typography>
         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-      </Box>
+      </Box> */}
 
       <Formik
         initialValues={{

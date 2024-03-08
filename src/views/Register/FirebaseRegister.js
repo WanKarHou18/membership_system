@@ -53,7 +53,6 @@ const FirebaseRegister = ({ ...rest }) => {
 
   const registerAccount = async (values) => {
     setErrorMessage("");
-    console.log('UserName',values.username)
     try {
       const userCredential = await signUp(values.email, values.password);
       const user = userCredential.user;
@@ -68,7 +67,7 @@ const FirebaseRegister = ({ ...rest }) => {
   };
   return (
     <>
-      <Grid container justifyContent="center">
+      {/* <Grid container justifyContent="center">
         <Grid item xs={12}>
           <Button
             fullWidth={true}
@@ -99,25 +98,26 @@ const FirebaseRegister = ({ ...rest }) => {
             Register with Google
           </Button>
         </Grid>
-      </Grid>
+      </Grid> */}
 
-      <Box alignItems="center" display="flex" mt={2}>
+      {/* <Box alignItems="center" display="flex" mt={2}>
         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
         <Typography color="textSecondary" variant="h5" sx={{ m: theme.spacing(2) }}>
           OR
         </Typography>
         <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-      </Box>
+      </Box> */}
 
       <Formik
         initialValues={{
           username:'',
-          email: 'admin@phoenixcoded.net',
-          password: 'aA123456',
+          email: '',
+          password: '',
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          password: Yup.string().max(255).required('Password is required with minimum length of 8').min(8),
+          username: Yup.string().max(255).required('Username/ Shop Name is required'),
         })}
         onSubmit={registerAccount}
       >
@@ -127,7 +127,7 @@ const FirebaseRegister = ({ ...rest }) => {
               error={Boolean(touched.username && errors.username)}
               fullWidth
               helperText={touched.username && errors.username}
-              label="Username"
+              label="Username / Shop Name"
               margin="normal"
               name="username"
               onBlur={handleBlur}
@@ -140,7 +140,7 @@ const FirebaseRegister = ({ ...rest }) => {
               error={Boolean(touched.email && errors.email)}
               fullWidth
               helperText={touched.email && errors.email}
-              label="Email Address / Username"
+              label="Email Address"
               margin="normal"
               name="email"
               onBlur={handleBlur}
@@ -192,7 +192,7 @@ const FirebaseRegister = ({ ...rest }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-            <Box my={0}>
+            {/* <Box my={0}>
               <FormControlLabel
                 control={
                   <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
@@ -205,7 +205,7 @@ const FirebaseRegister = ({ ...rest }) => {
                 }
               />
 
-            </Box>
+            </Box> */}
             <Box mt={2}>
               <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                 Register

@@ -38,8 +38,38 @@ import Breadcrumb from 'component/Breadcrumb';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { validationSchema } from './validation';
 import { CustomerMembership,updateCustomerMembership } from 'api/customerMembership';
+import AlertInfo from 'component/AlertInfo';
+import { alertMessages } from 'constants/alertMessages.constants';
 
 // ==============================|| FIREBASE LOGIN ||============================== //
+
+const EDIT_MEMBERSHIPS = 'EDIT_MEMBERSHIPS';
+const alertMessage = alertMessages[EDIT_MEMBERSHIPS]
+
+const initialAlertMessageValues = {
+  alertMessage: '',
+  isDisplay: false,
+}
+
+const isStartDateValid = (startDate, endDate) => {
+  return dayjs(startDate).isBefore(dayjs(endDate));
+}
+
+const BreadcrumbSection =()=>{
+  return(
+    <Breadcrumb title="Loyalty Card">
+      <Typography component={Link} to="/" variant="subtitle2" color="inherit" className="link-breadcrumb">
+        Home
+      </Typography>
+      <Typography component={Link} to="/customer" variant="subtitle2" color="inherit" className="link-breadcrumb">
+        Customer
+      </Typography>
+      <Typography variant="subtitle2" color="primary" className="link-breadcrumb">
+        Loyalty Card
+      </Typography>
+  </Breadcrumb>
+  )
+}
 
 const MembershipForm = ({ isEdit,...rest }) => {
   const theme = useTheme();
@@ -49,30 +79,52 @@ const MembershipForm = ({ isEdit,...rest }) => {
 
   const today = new Date();
   const customerMembership = new CustomerMembership();
-  const statuses = ['Active','Close']
+  const statuses = ['Active','Non-Active']
   //ToDo:: handle if access the membership form. 
   const membershipData = location.state.data;
   const [startDate,setStartDate]=useState(membershipData?dayjs(membershipData.startDate):dayjs(today));
   const [endDate,setEndDate]=useState(membershipData?dayjs(membershipData.expiryDate):dayjs(today));
+  const [isAlert, setAlert] = useState(initialAlertMessageValues);
 
-  const generateAndSetupMembershipCode=()=>{
-    return 'Hello'
-  }
-  const code = generateAndSetupMembershipCode();
+  const handleSubmitMemberShipForm= (values)=>{
+    try{
 
-  const handleSubmitMemberShipForm= async(values)=>{
-    customerMembership.uuid=user.email;
-    customerMembership.customerName=values.editCustomerName;
-    customerMembership.membershipId=membershipData.membershipId;
-    customerMembership.pointToReach=values.editPointsToReach;
-    customerMembership.currentPoint=values.editCurrentPoint;
-    customerMembership.expiryDate=new Date(endDate);
-    customerMembership.startDate=new Date(startDate);
-    customerMembership.duration='';
-    customerMembership.membershipCode='12345';
-    customerMembership.status=values.editMemberStatus;
-    updateCustomerMembership(membershipData.membershipId,customerMembership);
-    navigate('/customer')
+      console.log('isStartDateValid...', isStartDateValid(startDate, endDate))
+      if(isStartDateValid(startDate, endDate)){
+        customerMembership.uuid=user.email;
+        customerMembership.customerName=values.editCustomerName;
+        customerMembership.membershipId=membershipData.membershipId;
+        customerMembership.pointToReach=values.editPointsToReach;
+        customerMembership.currentPoint=values.editCurrentPoint;
+        customerMembership.expiryDate = dayjs(endDate).format('YYYY-MM-DD');
+        customerMembership.startDate =dayjs(startDate).format('YYYY-MM-DD') ;
+        customerMembership.duration='';
+        customerMembership.membershipCode= values.editMembershipCode;
+        customerMembership.status=values.editMemberStatus;
+        customerMembership.reward=values.editReward;
+        
+        setAlert((prev) => ({
+          ...prev,
+          alertMessage: alertMessage['SUCCESS'],
+          isDisplay: true,
+        }));
+
+        updateCustomerMembership(membershipData.membershipId,customerMembership);
+        navigate('/customer')
+      }else{
+        setAlert({
+          alertMessage: alertMessage['STARTDATE_NOT_VALID'],
+          isDisplay: true,
+        })
+      }
+    }catch(error){
+
+      setAlert((prev)=>{return {
+        alertMessage: alertMessage['FAILURE'],
+        isDisplay: true,
+      }})
+      console.log('updateCustomerError...', error)
+    }
   }
 
   const initialValues = membershipData?{
@@ -81,31 +133,36 @@ const MembershipForm = ({ isEdit,...rest }) => {
     editPointsToReach:membershipData.pointToReach,
     editCurrentPoint:membershipData.currentPoint,
     submit: null,
-    editMemberStatus:membershipData.status
+    editMemberStatus:membershipData.status,
+    editReward: membershipData.reward,
   }:{
     editCustomerName:'',
     editMembershipCode:'',
     editPointsToReach:'',
     editCurrentPoint:'',
     submit: null,
-    editMemberStatus:''
+    reward: '',
+    editMemberStatus:'',
+    editReward: '',
   }
 
-  const BreadcrumbSection =()=>{
-    return(
-      <Breadcrumb title="Membership Form">
-        <Typography component={Link} to="/" variant="subtitle2" color="inherit" className="link-breadcrumb">
-          Home
-        </Typography>
-        <Typography component={Link} to="/customer" variant="subtitle2" color="inherit" className="link-breadcrumb">
-          Sample Page
-        </Typography>
-        <Typography variant="subtitle2" color="primary" className="link-breadcrumb">
-          MembershipForm
-        </Typography>
-    </Breadcrumb>
-    )
-  }
+  useEffect(() => {
+  }, [handleSubmitMemberShipForm]);
+
+  useEffect(() => {
+    if (isAlert.isDisplay) {
+      const timer = setTimeout(() => { 
+        setAlert((prev) => {
+          return {
+            ...prev,
+            isDisplay:false,
+          }
+        });
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isAlert]);
 
   return (
     <>
@@ -153,11 +210,11 @@ const MembershipForm = ({ isEdit,...rest }) => {
                 <TextField
                 fullWidth
                 disabled={true}
-                label="Membership Code (auto generated)"
+                label="Loyalty Code (auto generated)"
                 margin="normal"
                 name="editMembershipCode"
                 type="membershipCode"
-                value={code}
+                value={values.editMembershipCode}
                 variant="outlined"
                 />
             </FormControl>
@@ -209,6 +266,20 @@ const MembershipForm = ({ isEdit,...rest }) => {
               variant="outlined"
               placeholder="example: 10"
             />
+            <TextField
+              error={Boolean(touched.reward && errors.reward)}
+              fullWidth
+              helperText={touched.reward && errors.reward}
+              label="Reward"
+              margin="normal"
+              name="editReward"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              type="editReward"
+              value={values.editReward}
+              variant="outlined"
+              placeholder="example: Free 1 Hamburger"
+            />
             <FormControl fullWidth>
               <InputLabel id="status-select-label">Status</InputLabel>
               <Select
@@ -235,13 +306,14 @@ const MembershipForm = ({ isEdit,...rest }) => {
             )}
 
             <Box mt={2}>
-              <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
+              <Button color="primary" fullWidth size="large" type="submit" variant="contained">
                 Save
               </Button>
             </Box>
           </form>
         )}
       </Formik>
+      { isAlert.isDisplay && <AlertInfo setAlert={setAlert} isAlert={isAlert}/> }
     </>
   );
 };

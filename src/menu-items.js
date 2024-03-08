@@ -8,7 +8,7 @@ import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import ChromeReaderModeOutlinedIcon from '@mui/icons-material/ChromeReaderModeOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { Settings } from '@mui/icons-material';
+import { Settings, Handyman } from '@mui/icons-material';
 
 const icons = {
   NavigationOutlinedIcon: NavigationOutlinedIcon,
@@ -38,7 +38,7 @@ export default {
           title: 'Dashboard',
           type: 'item',
           icon: icons['HomeOutlinedIcon'],
-          url: '/dashboard/default'
+          url: '/dashboard'
         }
       ]
     },
@@ -157,17 +157,28 @@ export default {
         //   disabled: true
         // },
         {
-          id: 'documentation',
-          title: 'Documentation',
+          id: 'help',
+          title: 'Help',
           type: 'item',
-          url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          // url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          url:'/help',
           icon: icons['HelpOutlineOutlinedIcon'],
           chip: {
             label: 'Help?',
             color: 'primary'
           },
-          external: true,
-          target: true
+          // external: false,
+          // target: true
+        },
+        {
+          id: 'services',
+          title: 'Services',
+          type: 'item',
+          // url: 'https://codedthemes.gitbook.io/materially-react-material-documentation/',
+          url:'/services',
+          icon: Handyman,
+          // external: false,
+          // target: true
         }
       ]
     }

@@ -12,21 +12,35 @@ import {
 import { auth } from "../config";
 import { useNavigate } from "react-router";
 
+// third party
+import { saveDataToSessionStorage } from "helper/sessionStorageHelper";
+import { current } from "immer";
+import { setUserEmail } from "store/actions";
+
+//redux
+import { useDispatch,useSelector } from 'react-redux';
+import * as actionTypes from 'store/actions';
+
 const userAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
+
+  const dispatch = useDispatch();
   const navigate = useNavigate()
   const [user, setUser] = useState({});
 
   function logIn(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+    const userCredentials = signInWithEmailAndPassword(auth, email, password);
+    return userCredentials;
   }
   function signUp(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
   }
   function logOut() {
+    // Remove user data from local storage
+    localStorage.removeItem('user');
     signOut(auth);
-    navigate('/landing-page');
+    navigate('/');
   }
   function googleSignIn() {
     const googleAuthProvider = new GoogleAuthProvider();
@@ -53,9 +67,9 @@ export function UserAuthContextProvider({ children }) {
       console.log("Auth", currentuser);
       setUser(currentuser);
     });
-
+  
     return () => {
-      unsubscribe();
+      unsubscribe(); // Unsubscribe when the component unmounts
     };
   }, []);
 
