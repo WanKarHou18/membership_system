@@ -55,16 +55,12 @@ export function UserAuthContextProvider({ children }) {
       // Profile updated!
       // ...
     }).catch((error) => {
-      // An error occurred
-      // ...
-      console.log('updateProfileError',error)
     });
     
   }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log("Auth", currentuser);
       setUser(currentuser);
     });
   

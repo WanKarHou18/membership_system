@@ -28,7 +28,6 @@ export class CustomerMembership {
  */
 export const addCustomerMembership = async (CustomerMembership) => {
   try {
-    // console.log('transformToObject',transformToObject(CustomerMembership))
     const resultRef = await addDoc(collection(db, CUSTOMER_MEMBERSHIP),JSON.parse(JSON.stringify(CustomerMembership)));
     if(resultRef && resultRef.id){
        //Update the uuid with DocId
@@ -38,7 +37,6 @@ export const addCustomerMembership = async (CustomerMembership) => {
     }
     return null;
   } catch (error) {
-    console.log('error',error)
     return null;
   }
 };
@@ -72,7 +70,6 @@ export const getCustomerMemberships= async () => {
 
       return memberships;
     } catch (error) {
-      console.log('HIHI',error)
       return null;
     }
   };
@@ -84,7 +81,6 @@ export const getCustomerMemberships= async () => {
  */
 export const getCustomerMembershipByUUID = async (uuid) => {
   try {
-    console.log('uuid',uuid)
     const memberships = [];
     //::Todo: Change it to use query methods.
     // const query = doc(collection(db,CUSTOMER_MEMBERSHIP), where("uuid", "!=", uuid))
@@ -108,10 +104,8 @@ export const getCustomerMembershipByUUID = async (uuid) => {
         memberships.push(customerMembership)
       }
     });
-    console.log('memberships...', memberships)
     return memberships;
   } catch (error) {
-    console.log('HIHI',error)
     return null;
   }
 };
@@ -128,7 +122,6 @@ export const updateCustomerMembership = async (docId, updatedData) => {
     await updateDoc(resultRef, JSON.parse(JSON.stringify(updatedData)));
     return true;
   } catch (error) {
-    console.log('updateCustomerMembershipFail',error)
     return false;
   }
 };

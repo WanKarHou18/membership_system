@@ -88,8 +88,6 @@ const MembershipForm = ({ isEdit,...rest }) => {
 
   const handleSubmitMemberShipForm= (values)=>{
     try{
-
-      console.log('isStartDateValid...', isStartDateValid(startDate, endDate))
       if(isStartDateValid(startDate, endDate)){
         customerMembership.uuid=user.email;
         customerMembership.customerName=values.editCustomerName;
@@ -123,7 +121,6 @@ const MembershipForm = ({ isEdit,...rest }) => {
         alertMessage: alertMessage['FAILURE'],
         isDisplay: true,
       }})
-      console.log('updateCustomerError...', error)
     }
   }
 

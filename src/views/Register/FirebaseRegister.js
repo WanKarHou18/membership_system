@@ -23,6 +23,8 @@ import {
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { getAuth, updateProfile} from "firebase/auth";
+import { auth } from 'config';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
@@ -56,12 +58,18 @@ const FirebaseRegister = ({ ...rest }) => {
     try {
       const userCredential = await signUp(values.email, values.password);
       const user = userCredential.user;
-      await user.updateProfile({
-        displayName: values.username,
-      });
-      navigate("/");
+      if(user){
+        updateProfile(auth.currentUser, {
+          displayName: values.username
+        }).then(() => {
+          navigate("/dashboard"); 
+        }).catch((error) => {
+          // An error occurred
+          // ...
+        });
+      }
     } catch (err) {
-      console.log('user_register_failure',err)
+      // console.log('user_register_failure',err)
       setErrorMessage("Register Unsuccessfully");
     }
   };

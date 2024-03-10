@@ -54,7 +54,6 @@ const initialValues = {
     
 }
 export const useDashBoard = (userEmail)=>{
-    console.log('userHello...',userEmail)
     const [memberships,setMemberships]=useState(initialValues);
     const getMemberships = async () => {
         try {
@@ -73,14 +72,11 @@ export const useDashBoard = (userEmail)=>{
                     membershipsProgress: membershipsProgress,
                     expiringMemberships: expiringMemberships
                 };
-                console.log('result...',result)
-                console.log('updated...',updated)
                 return updated;
             }):null
         });
             
         } catch (error) {
-            console.log("fetchError...", error);
             setMemberships((prev) => {
                 const updated = {
                     ...prev,
@@ -99,13 +95,10 @@ export const useDashBoard = (userEmail)=>{
     useEffect(()=>{
     if(userEmail){
         getMemberships()
-        console.log('Fetch///')
     }
     },[
         userEmail
     ])
-
-    console.log("PAPA...", memberships);
 
     return {
         totalMembershipQuantity: memberships.totalMembership,

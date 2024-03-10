@@ -54,16 +54,13 @@ const SettingPage = ({ isEdit,...rest }) => {
   const navigate = useNavigate();
 
   const handleSubmitSaveSetting= async(values)=>{
-    console.log('values',values.username)
     updateProfile(auth.currentUser, {
       displayName: values.username
     }).then(() => {
-      console.log('updateProfileSuccess', auth.currentUser)
       navigate("/")
     }).catch((error) => {
       // An error occurred
       // ...
-      console.log('updateProfileError...', error)
     });
     
   }

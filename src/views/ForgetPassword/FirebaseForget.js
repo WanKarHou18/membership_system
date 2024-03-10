@@ -44,11 +44,8 @@ const FirebaseForgetPassowrd = ({ ...rest }) => {
       try {
         //Testing: "elonwan@gmail.com","Hello@2024"
         const verification = await resetPassword('wankarhou18@gmail.com');
-        
-        console.log("Verification",verification)
         navigate("/");
       } catch (err) {
-        console.log('Err',err)
         setErrorMessage("Verification unsuccessfully")
       }
   }

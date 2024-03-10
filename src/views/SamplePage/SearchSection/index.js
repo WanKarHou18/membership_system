@@ -84,14 +84,12 @@ const SearchSection = (props) => {
   const submitSearch = (searchOption, event) =>{
 
     let filteredMemberships;
-    console.log('Search Option...', searchOption)
     switch (searchOption) {
       case 'Customer Name':{
         const searchInput = document.getElementById('searchInputField');
         //TODO: Clear searchInput
         if(searchInput.value != ''){
           filteredMemberships = filterMemberships(searchOption,searchInput.value,membershipsData)
-          console.log('Here...',filteredMemberships)
           setData(filteredMemberships)
         }
         break;
@@ -102,7 +100,6 @@ const SearchSection = (props) => {
         //TODO: Clear searchInput
         if(searchInput.value != ''){
           filteredMemberships = filterMemberships(searchOption,searchInput.value,membershipsData)
-          console.log('Here...',filteredMemberships)
           setData(filteredMemberships)
         }
         break;

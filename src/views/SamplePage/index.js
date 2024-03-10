@@ -1,5 +1,5 @@
 import React,{ useState,useEffect }from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 // material-ui
 import { Grid, Typography } from '@mui/material';
@@ -24,7 +24,8 @@ import { useUserAuth } from '../../context/UserAuthContext';
 
 const SamplePage = () => {
 
-  const userEmail = localStorage.getItem('userEmail');
+  const {user} = useUserAuth();
+  const location = useLocation()
 
   const initialDialogValues = {
     isOpen: false,
@@ -34,11 +35,9 @@ const SamplePage = () => {
   const [isOpenCardDialog, setOpenCardDialog] = useState(initialDialogValues);
   const [memberships,setMemberships]=useState(null);
 
-  const {user} = useUserAuth();
-
   const getMemberships = async () => {
     try {
-        await getCustomerMembershipByUUID(userEmail).then((result)=>{
+        await getCustomerMembershipByUUID(user.email).then((result)=>{
           setMemberships(result)
         });
     } catch (error) {
@@ -51,7 +50,8 @@ const SamplePage = () => {
       getMemberships()
     }
   },[
-    user
+    user,
+    location.key
   ])
 
   const handleDeleteMembership = async (membershipId) => {

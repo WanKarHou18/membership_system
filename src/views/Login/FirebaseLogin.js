@@ -55,10 +55,8 @@ const FirebaseLogin = ({ ...rest }) => {
       try {
         //Testing: "elonwan@gmail.com","Hello@2024"
         const userCredential=await logIn(values.email,values.password);
-        console.log("Login User",userCredential)
         navigate("/");
       } catch (err) {
-        console.log('Err',err)
         // setError(err.message);
         setErrorMessage("Login unsuccessfully")
       }

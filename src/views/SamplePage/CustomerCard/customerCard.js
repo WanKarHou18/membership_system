@@ -89,8 +89,6 @@ const CustomerCard = ({showDialog,data,deleteMembership}) => {
   }
 
   const pointsProgress =()=>{
-    console.log('currentPoint',parseInt(data.currentPoint));
-    console.log('pointToReach',parseInt(data.pointToReach))
     return(
       <Grid item xs={12}>
         <Grid container alignItems="center" spacing={1}>

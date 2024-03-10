@@ -31,7 +31,6 @@ import value from 'assets/scss/_themes-vars.scss';
  * @returns {}
  */
 export const generateChartData = (data) => {
-  console.log('chartData...',data)
   return{
     height: 228,
     type: 'donut',

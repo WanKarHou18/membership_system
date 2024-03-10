@@ -126,8 +126,6 @@ const NewMembershipForm = (props) => {
     }
   }, [isAlert]);
 
-  // console.log('Sample Memberships...', memberships.length);
-
   const code = generateUniqueMembershipCode(MEMBERSHIP_CODE_LENGTH);
 
   const handleSubmitMemberShipForm= async(values)=>{
@@ -160,7 +158,6 @@ const NewMembershipForm = (props) => {
         alertMessage: alertMessage['FAILURE'],
         isDisplay: true,
       })
-      console.log('Add loyalty card error...',error)
     }
   }
   

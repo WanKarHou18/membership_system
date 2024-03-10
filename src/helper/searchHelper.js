@@ -65,7 +65,6 @@ const categorizeMemberships = (filterValue, memberships) => {
  */
 export const filterMemberships = (filterType, filterValue, membershipsData) => {
     let filteredMemberships = [];
-    console.log('filterType', filterType);
     switch (filterType) {
         case 'Customer Name':
             filteredMemberships = searchByCustomerName(filterValue, membershipsData);

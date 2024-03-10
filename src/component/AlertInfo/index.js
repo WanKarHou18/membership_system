@@ -6,7 +6,6 @@ import {
 
 const AlertInfo = ({setAlert,isAlert}) => {
   
-  console.log('isAlert', isAlert);
     return(
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

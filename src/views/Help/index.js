@@ -77,7 +77,6 @@ const HelpPage = () => {
               {!item.isNested && item.details &&
                 <>
                   {item.details.map((nestedItem, nestedIndex) => {
-                    console.log('nestedItem...', nestedItem.type)
                     return(
                       <div key={nestedItem}>
                             {htmlElementMapping({ elementType: nestedItem.type, data: nestedItem.data })}

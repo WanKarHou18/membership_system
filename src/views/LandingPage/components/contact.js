@@ -19,7 +19,6 @@ export const Contact = (props) => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, email, message);
     
     const subject = name;
     const body = message + '  ' + 'contact me via email:' + email;

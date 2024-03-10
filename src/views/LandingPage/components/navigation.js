@@ -3,7 +3,6 @@ import { websiteTitle } from "config";
 import { useUserAuth } from "context/UserAuthContext";
 export const Navigation = (props) => {
   const {user} = useUserAuth();
-  console.log('User...',user)
   return (
     <nav id="menu" className="navbar navbar-default navbar-fixed-top">
       <div className="container">
