@@ -45,7 +45,7 @@ import { validationSchema } from './validation';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { CustomerMembership,addCustomerMembership, getCustomerMembershipByUUID} from 'api/customerMembership';
 import { useNavigate } from 'react-router-dom';
-import { generateUniqueMembershipCode, verifyIsNotOverLimit} from 'helper/membershipHelper';
+import { generateUniqueMembershipCode, verifyIsOverLimit} from 'helper/membershipHelper';
 import AlertInfo from 'component/AlertInfo';
 import { alertMessages } from 'constants/alertMessages.constants';
 import { MEMBERSHIP_CODE_LENGTH} from 'constants/memberships.constants';
@@ -320,7 +320,7 @@ const AutoSetField = () => {
             )}
 
             <Box mt={2}>
-              <Button color="primary" disabled={isSubmitting || !(verifyIsNotOverLimit(memberships))} fullWidth size="large" type="submit" variant="contained">
+              <Button color="primary" disabled={isSubmitting || !(verifyIsOverLimit(memberships))} fullWidth size="large" type="submit" variant="contained">
                 Add
               </Button>
             </Box>

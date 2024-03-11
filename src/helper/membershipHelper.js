@@ -19,7 +19,20 @@ export function generateUniqueMembershipCode(length){
     return code;
 }
 
-export function verifyIsNotOverLimit(data){
-  return LOYALTY_CARD_LIMIT >  data?.length;
+export function verifyIsOverLimit(data){
+  console.log('verifyIsNotOverLimit(data)', data)
+  if(data){
+    if(data.length){
+      if(LOYALTY_CARD_LIMIT > data.length){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      return true;
+    }
+  }else{
+    return true;
+  }
 }
 

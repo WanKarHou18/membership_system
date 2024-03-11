@@ -21,13 +21,13 @@ export const websiteTitle = "FRENZ"
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDR_lrYX8Yb1z42wauhlvdHwwTiOs0w_lk",
-  authDomain: "burger-shop-fc2b7.firebaseapp.com",
-  projectId: "burger-shop-fc2b7",
-  storageBucket: "burger-shop-fc2b7.appspot.com",
-  messagingSenderId: "1039617321690",
-  appId: "1:1039617321690:web:583f4bb4a6fab7de41d3e3",
-  measurementId: "G-LSNJXKDSZK"
+  apiKey: "AIzaSyCJK6WgwSYE_Uhj7gnzEchdmJmHscaB71g",
+  authDomain: "frenz-platform.firebaseapp.com",
+  projectId: "frenz-platform",
+  storageBucket: "frenz-platform.appspot.com",
+  messagingSenderId: "385287484939",
+  appId: "1:385287484939:web:ad2b1e7e0dc871dc08f90e",
+  measurementId: "G-EM5MZEPEQH"
 };
 
 // Initialize Firebase

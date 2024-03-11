@@ -9,6 +9,8 @@ import downloadCardIcon from '../../assets/images/help/addLoyaltyCard/download_c
 import copyPasteCard from '../../assets/images/help/addLoyaltyCard//copy_paste_card.png'
 import setting from '../../assets/images/help/setting/setting.png'
 
+import { LOYALTY_CARD_LIMIT } from 'constants/memberships.constants'
+
 /**
  * Description: Two levels of Accordion 
  */
@@ -93,7 +95,7 @@ export const helpData =
                 expandIcon: null,
                 isNested: false,
                 details:[
-                    {type:'Text',data:'In initial stage, given FREE loyalty card for each user is 25'},
+                    {type:'Text',data: `In initial stage, given FREE loyalty card for each user is ${LOYALTY_CARD_LIMIT}`},
                 ]
             },
             {
