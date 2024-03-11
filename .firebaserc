@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "burger-shop-fc2b7"
-  }
+    "default": "frenz-platform",
+    "production": "frenz-platform"
+  },
+  "targets": {},
+  "etags": {}
 }
